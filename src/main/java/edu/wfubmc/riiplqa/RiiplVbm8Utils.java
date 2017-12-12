@@ -31,7 +31,6 @@ import org.nrg.xft.XFT;
 
 import edu.wfubmc.riiplqa.RiiplDebug;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
 
 

@@ -1,6 +1,5 @@
 package edu.wfubmc.riiplqa;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,11 +10,9 @@ import ij.io.FileSaver;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
-//import ij.measure.Calibration;
 
 //Slice numbering
 import java.awt.Font;
-import java.awt.font.FontRenderContext;
 import java.awt.Graphics;
 import java.awt.Color;
 
@@ -23,9 +20,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-
-//Alternate saving
-//import javax.imageio.ImageIO;
 
 //Nifti reading class
 import net.sourceforge.niftilib.Nifti1Dataset;

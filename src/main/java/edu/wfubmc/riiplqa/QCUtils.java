@@ -16,14 +16,7 @@ import org.nrg.xdat.turbine.utils.TurbineUtils;
 
 // httpcomponents - auth
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.auth.AuthScheme;
-// import org.apache.commons.httpclient.auth.BasicScheme;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-
 // httpcomponents - client 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -32,8 +25,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.AuthCache;
 
-// httpcomponents - mime
-import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 
@@ -160,7 +151,7 @@ public class QCUtils
 		{
 			logger.error("Cannot create REST URL to save image montage", e);
 			data.setMessage("Cannot create REST URL to save image montage: " + e);
-			//data.setScreenTemplate("Error.vm");
+
 			return;
 		}
 		postFile(data,uri,file);

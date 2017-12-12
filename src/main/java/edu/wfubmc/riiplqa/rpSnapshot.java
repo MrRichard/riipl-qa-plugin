@@ -2,37 +2,26 @@
 //in the /riipl30/bwagner/incoming/rpSnapshot directory
 package edu.wfubmc.riiplqa;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.lang.Double;
-import java.lang.Math;
+
+import org.jfree.chart.ChartFactory;
+//Charts
+import org.jfree.chart.JFreeChart;
+// import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 //Image Stuff
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
-import java.awt.Graphics;
-
-//Charts
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.ChartFactory;
-// import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
-import org.jfree.chart.plot.XYPlot;
-import java.awt.Color;
-
-
-//Alternate saving
-import javax.imageio.ImageIO;
 
 
 /** A class/executable for creating motion correction image from an SPM rp*.txt file

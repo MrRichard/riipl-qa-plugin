@@ -43,7 +43,7 @@ public class Upload_riiplqa_NormVbm8DKEData extends org.nrg.xnat.turbine.modules
 	{
 		logger.debug("Upload_riiplqa_NormVbm8DKEData::finalProcessing");
 		org.nrg.xdat.om.RiiplNormvbm8dkedata om = new org.nrg.xdat.om.RiiplNormvbm8dkedata(item);
-		org.nrg.xdat.om.XnatMrsessiondata mr = om.getMrSessionData();
+	    org.nrg.xdat.om.XnatMrsessiondata mr = om.getMrSessionData();
 		
 		ArrayList<WildcardFileFilter> imageFilters=new ArrayList<WildcardFileFilter>();
 		imageFilters.add(new WildcardFileFilter("wrfa.nii*"));
