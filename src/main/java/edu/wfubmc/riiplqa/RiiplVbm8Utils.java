@@ -1,12 +1,10 @@
-package edu.wfubmc.riipl;
+package edu.wfubmc.riiplqa;
 
 //XNAT imports
 import org.apache.turbine.util.RunData;
 import org.nrg.xdat.turbine.utils.TurbineUtils;
 import org.nrg.xft.ItemI;
 
-//other stuff
-import edu.wfubmc.riipl.RiiplDebug;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -30,6 +28,9 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.util.Properties;
 import org.nrg.xft.XFT;
+
+import edu.wfubmc.riiplqa.RiiplDebug;
+
 import java.util.Hashtable;
 import java.util.Enumeration;
 
@@ -278,7 +279,7 @@ public class RiiplVbm8Utils
 			Boolean processCsvFileTissue = true;
 			File csvFile = null;
 			
-			if (elementName.equals("riipl:NormVbm8DTIData"))
+			if (elementName.equals("riiplqa:NormVbm8DTIData"))
 			{
 				//look for DTI_SNNNN directories first.
 				//Also for DTI_SNNN directories which come in normalized from the older DTI pipeline
@@ -305,7 +306,7 @@ public class RiiplVbm8Utils
 					return;
 				}
 			}
-			if (elementName.equals("riipl:NormVbm8DKIData"))
+			if (elementName.equals("riiplqa:NormVbm8DKIData"))
 			{
 				//look for DKI_SNNNN directories first.
 				//Also for DKI_SNNN directories which come in normalized from the older DKI pipeline
@@ -332,7 +333,7 @@ public class RiiplVbm8Utils
 					return;
 				}
 			}
-			if (elementName.equals("riipl:NormVbm8DKEData"))
+			if (elementName.equals("riiplqa:NormVbm8DKEData"))
 			{
 				//look for DKE_SNNNN directories first.
 				//Also for DKE_SNNN directories which come in normalized from the older DKE pipeline
@@ -359,7 +360,7 @@ public class RiiplVbm8Utils
 					return;
 				}
 			}
-			if (elementName.equals("riipl:NormVbm8MTRData"))
+			if (elementName.equals("riiplqa:NormVbm8MTRData"))
 			{
 				//look for MTR_SNNNN directories first.
 				File[] MTRdirs = vbm8Dir.listFiles((FileFilter) new WildcardFileFilter((new String[] {"MTR_S????","MTR_S???"})));
@@ -385,7 +386,7 @@ public class RiiplVbm8Utils
 					return;
 				}
 			}
-			if (elementName.equals("riipl:NormVbm8LST8Data"))
+			if (elementName.equals("riiplqa:NormVbm8LST8Data"))
 			{
 				processCsvFileTissue = false; //No processing of TissueData
 				//look for MTR_SNNNN directories first.
@@ -618,7 +619,7 @@ public class RiiplVbm8Utils
 					}
 					else if (niftis.length > 1)
 					{
-						if (elementName.equals("riipl:NormVbm8vPCASLData"))
+						if (elementName.equals("riiplqa:NormVbm8vPCASLData"))
 						{
 							boolean hasMultipleCBF=false;
 							boolean hasMultipleATT=false;

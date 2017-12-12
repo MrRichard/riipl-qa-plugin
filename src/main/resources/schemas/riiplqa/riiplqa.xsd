@@ -1,141 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://riipl.wfubmc.edu/riipl" xmlns:riipl="http://riipl.wfubmc.edu/riipl" xmlns:xdat="http://nrg.wustl.edu/xdat" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xnat="http://nrg.wustl.edu/xnat" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema 
+targetNamespace="http://riipl.wfubmc.edu/riiplqa" xmlns:riiplqa="http://riipl.wfubmc.edu/riiplqa" xmlns:xdat="http://nrg.wustl.edu/xdat" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xnat="http://nrg.wustl.edu/xnat" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:import namespace="http://nrg.wustl.edu/xnat" schemaLocation="../xnat/xnat.xsd"/>
-	<xs:element name="vbmVolumetrics"            type="riipl:vbmVolumetricsData"/>
-	<xs:element name="SegSpm8NewSeg"             type="riipl:SegSpm8NewSegData"/>
-	<xs:element name="SegVbm8"                   type="riipl:SegVbm8Data"/>
-	<xs:element name="NormVbm8PASL"              type="riipl:NormVbm8PASLData"/>
-	<xs:element name="NormVbm8PCASL"             type="riipl:NormVbm8PCASLData"/>
-	<xs:element name="NormVbm8vPCASL"            type="riipl:NormVbm8vPCASLData"/>
-	<xs:element name="NormVbm8PCASL2"            type="riipl:NormVbm8PCASL2Data"/>
-	<xs:element name="NormVbm8PCASL8"            type="riipl:NormVbm8PCASL8Data"/>
-	<xs:element name="NormVbm8PCASLbh"           type="riipl:NormVbm8PCASLbhData"/>
-	<xs:element name="NormVbm8DTI"               type="riipl:NormVbm8DTIData"/>
-	<xs:element name="NormVbm8DKI"               type="riipl:NormVbm8DKIData"/>
-	<xs:element name="NormVbm8DKE"               type="riipl:NormVbm8DKEData"/>
-	<xs:element name="NormVbm8MTR"               type="riipl:NormVbm8MTRData"/>
-	<xs:element name="NormVbm8LST8"              type="riipl:NormVbm8LST8Data"/>
-	<xs:element name="vbm8_covariance"           type="riipl:vbm8_covData"/>
-
-	<xs:complexType name="vbmVolumetricsData">
-		<xs:complexContent>
-			<xs:extension base="xnat:mrAssessorData">
-				<xs:annotation>
-					<xs:documentation>Volumes of Segmented Images</xs:documentation>
-				</xs:annotation>
-				<xs:sequence minOccurs="0">
-					<xs:element name="originalImage" minOccurs="0" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:appinfo>
-								<xdat:field>
-									<xdat:relation uniqueComposite="ORIG_NAME"/>
-								</xdat:field>
-							</xs:appinfo>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:sequence minOccurs="0">
-								<xs:element name="segmentedImage" minOccurs="0" maxOccurs="unbounded">
-									<xs:annotation>
-										<xs:appinfo>
-											<xdat:field>
-												<xdat:relation uniqueComposite="SEG_NAME"/>
-											</xdat:field>
-										</xs:appinfo>
-									</xs:annotation>
-									<xs:complexType>
-										<xs:attribute name="filename" type="xs:string">
-											<xs:annotation>
-												<xs:appinfo>
-													<xdat:field uniqueComposite="SEG_NAME"/>
-												</xs:appinfo>
-											</xs:annotation>
-										</xs:attribute>
-										<xs:attribute name="tissueType" type="xs:string"/>
-										<xs:attribute name="normalization" type="xs:string"/>
-										<xs:attribute name="volume" type="xs:float"/>
-										<xs:attribute name="units" type="xs:string"/>
-									</xs:complexType>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="filename" type="xs:string" use="required">
-								<xs:annotation>
-									<xs:appinfo>
-										<xdat:field uniqueComposite="ORIG_NAME"/>
-									</xs:appinfo>
-								</xs:annotation>
-							</xs:attribute>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="SegSpm8NewSegData">
-		<xs:complexContent>
-			<xs:extension base="xnat:mrAssessorData">
-				<xs:annotation>
-					<xs:documentation>SPM 8 New Segmention Image QA Report</xs:documentation>
-				</xs:annotation>
-				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence minOccurs="0">
-								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
-									<xs:complexType>
-										<xs:attribute name="file" type="xs:string" use="required"/>
-										<xs:attribute name="date" type="xs:date" use="required"/>
-										<xs:attribute name="time" type="xs:time" use="required"/>
-										<xs:attribute name="quality" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
-									<xs:complexType>
-										<xs:sequence minOccurs="0">
-											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
-												<xs:complexType>
-													<xs:attribute name="tissueType" type="xs:string"/>
-													<xs:attribute name="mean" type="xs:float"/>
-													<xs:attribute name="stdDev" type="xs:float"/>
-													<xs:attribute name="min" type="xs:float"/>
-													<xs:attribute name="max" type="xs:float"/>
-													<xs:attribute name="nVoxels" type="xs:integer"/>
-													<xs:attribute name="gmThreshold" type="xs:float"/>
-													<xs:attribute name="gmMin" type="xs:float"/>
-													<xs:attribute name="gmMax" type="xs:float"/>
-													<xs:attribute name="wmThreshold" type="xs:float"/>
-													<xs:attribute name="wmMin" type="xs:float"/>
-													<xs:attribute name="wmMax" type="xs:float"/>
-													<xs:attribute name="csfThreshold" type="xs:float"/>
-													<xs:attribute name="csfMin" type="xs:float"/>
-													<xs:attribute name="csfMax" type="xs:float"/>
-													<xs:attribute name="snr" type="xs:float"/>
-													<xs:attribute name="segImg" type="xs:string"/>
-												</xs:complexType>
-											</xs:element>
-										</xs:sequence>
-										<xs:attribute name="file" type="xs:string" use="required"/>
-										<xs:attribute name="parameter" type="xs:string" use="required"/>
-										<xs:attribute name="filedate" type="xs:date" use="required"/>
-										<xs:attribute name="filetime" type="xs:time" use="required"/>
-										<xs:attribute name="quality" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="qcImage" type="xs:string" use="required"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
-							<xs:attribute name="time" type="xs:time" use="required"/>
-							<xs:attribute name="comments" type="xs:string"/>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+	
+	<xs:element name="SegVbm8"                   type="riiplqa:SegVbm8Data"/>
+	<xs:element name="NormVbm8PASL"              type="riiplqa:NormVbm8PASLData"/>
+	<xs:element name="NormVbm8PCASL"             type="riiplqa:NormVbm8PCASLData"/>
+	<xs:element name="NormVbm8vPCASL"            type="riiplqa:NormVbm8vPCASLData"/>
+	<xs:element name="NormVbm8PCASL2"            type="riiplqa:NormVbm8PCASL2Data"/>
+	<xs:element name="NormVbm8PCASL8"            type="riiplqa:NormVbm8PCASL8Data"/>
+	<xs:element name="NormVbm8PCASLbh"           type="riiplqa:NormVbm8PCASLbhData"/>
+	<xs:element name="NormVbm8DTI"               type="riiplqa:NormVbm8DTIData"/>
+	<xs:element name="NormVbm8DKI"               type="riiplqa:NormVbm8DKIData"/>
+	<xs:element name="NormVbm8DKE"               type="riiplqa:NormVbm8DKEData"/>
+	<xs:element name="NormVbm8MTR"               type="riiplqa:NormVbm8MTRData"/>
+	<xs:element name="NormVbm8LST8"              type="riiplqa:NormVbm8LST8Data"/>
+	<xs:element name="vbm8_covariance"           type="riiplqa:vbm8_covData"/>
 
 	<xs:complexType name="SegVbm8Data">
 		<xs:complexContent>

@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+$page.setTitle("XDAT")
+$page.setLinkColor($ui.alink)
+$page.setVlinkColor($ui.vlink)
+#set($months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+#set($days = [ 1..31 ])
+#set($years = [ $!turbineUtils.getYear()..1900])
+#if ($data.message)
+<font color="red" size="3">$data.message</font>
+#end
+<p>
+<form ID="form1" name="form1" method="post" action="$link.setAction("ModifyImageAssessorData")">
+<input type="hidden" name="project" value="$!{project}" >
+#if($vr)
+	<font color="red">Invalid parameters:<BR>$vr.toHTML()</font>
+<HR>
+#end
+
+<TABLE width="100%">
+	<TR>
+		<TD>
+			<table width="100%">
+				<TR>
+					<TD align="left" valign="middle">
+						<DIV class="edit_title">NormVbm8vPCASL Details</DIV>
+					</TD>
+				</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD>
+			<TABLE width="100%">
+				<TR>
+					<TD valign="top">
+						<TABLE>
+							<TR><TD colspan='2'>
+								<hr>
+								#parse("/screens/xnat_edit_experimentData.vm")
+								<HR></TD></TR>
+							<tr>
+								<th align="left">NormVbm8vPCASL ID</th>
+								<TD align="left">#xdatStringBox("riiplqa:NormVbm8vPCASLData.ID" $item "" $vr)</TD>
+							</tr>
+							<tr>
+								<TD colspan="2">#parse("/screens/EditProjectSpecificFields.vm")</TD>
+							</tr>
+							<TR><TD>imageSession_ID</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/imageSession_ID" $item "" $vr)</TD></TR>
+							<TR><TD>date</TD><TD>#xdatDateBox("riiplqa:NormVbm8vPCASLData/date" $item $vr $years)</TD></TR>
+							<TR><TD>time</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/time" $item "" $vr)</TD></TR>
+							<TR><TD>duration</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/duration" $item "" $vr)</TD></TR>
+							<TR><TD>delay</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/delay" $item "" $vr)</TD></TR>
+							<TR><TD>delay/ref_expt_id</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/delay/ref_expt_id" $item "" $vr)</TD></TR>
+							<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/note" $item "" $vr)</TD></TR>
+							<TR><TD>acquisition_site</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/acquisition_site" $item "" $vr)</TD></TR>
+							<TR><TD>visit_id</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/visit_id" $item "" $vr)</TD></TR>
+							<TR><TD>visit</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/visit" $item "" $vr)</TD></TR>
+							<TR><TD>version</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/version" $item "" $vr)</TD></TR>
+							<TR><TD>original</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/original" $item "" $vr)</TD></TR>
+							<TR><TD>protocol</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/protocol" $item "" $vr)</TD></TR>
+							<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/label" $item "" $vr)</TD></TR>
+							<TR><TD>subject</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/subject" $item "" $vr)</TD></TR>
+						</TABLE>
+					</TD>
+				</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData -->
+			<TABLE>
+				<TR><TH align="left"><font face="$ui.sansSerifFonts" size="2">Related Items</font></TH></TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#foreach($xnat_abstractResource_1_COUNTER in [0..5])
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER] -->
+								<TABLE>
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/note" $item "" $vr)</TD></TR>
+												<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/label" $item "" $vr)</TD></TR>
+												<TR><TD>file_count</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/file_count" $item "" $vr)</TD></TR>
+												<TR><TD>file_size</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/file_size" $item "" $vr)</TD></TR>
+																		#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/xnat_abstractResource_id" $item "")
+											</TABLE>
+										</TD>
+									</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag -->
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR>
+													<TD>tag</TD>
+													<TD>name</TD>
+												</TR>
+												#foreach($xnat_abstractResource_tag_2_COUNTER in [0..5])
+													<TR>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/tag" $item "" $vr)</TD>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/name" $item "" $vr)</TD>
+														#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/xnat_abstractResource_tag_id" $item "")
+													</TR>
+												#end
+											</TABLE>
+										</TD>
+									</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag -->
+								</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/in/file[$xnat_abstractResource_1_COUNTER] -->
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#foreach($xnat_abstractResource_2_COUNTER in [0..5])
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER] -->
+								<TABLE>
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/note" $item "" $vr)</TD></TR>
+												<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/label" $item "" $vr)</TD></TR>
+												<TR><TD>file_count</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/file_count" $item "" $vr)</TD></TR>
+												<TR><TD>file_size</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/file_size" $item "" $vr)</TD></TR>
+																		#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/xnat_abstractResource_id" $item "")
+											</TABLE>
+										</TD>
+									</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag -->
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR>
+													<TD>tag</TD>
+													<TD>name</TD>
+												</TR>
+												#foreach($xnat_abstractResource_tag_3_COUNTER in [0..5])
+													<TR>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag[$xnat_abstractResource_tag_3_COUNTER]/tag" $item "" $vr)</TD>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag[$xnat_abstractResource_tag_3_COUNTER]/name" $item "" $vr)</TD>
+														#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag[$xnat_abstractResource_tag_3_COUNTER]/xnat_abstractResource_tag_id" $item "")
+													</TR>
+												#end
+											</TABLE>
+										</TD>
+									</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag -->
+								</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/out/file[$xnat_abstractResource_2_COUNTER] -->
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/parameters/addParam -->
+				<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/parameters/addParam</font></TH></TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE>
+							<TR>
+								<TD>addField</TD>
+								<TD>name</TD>
+							</TR>
+							#foreach($xnat_addField_3_COUNTER in [0..5])
+								<TR>
+									<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/parameters/addParam[$xnat_addField_3_COUNTER]/addField" $item "" $vr)</TD>
+									<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/parameters/addParam[$xnat_addField_3_COUNTER]/name" $item "" $vr)</TD>
+									#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/parameters/addParam[$xnat_addField_3_COUNTER]/xnat_addField_id" $item "")
+								</TR>
+							#end
+						</TABLE>
+					</TD>
+				</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/parameters/addParam -->
+				<TR>
+					<TD align="left" valign="top">
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/provenance -->
+						<TABLE>
+							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/provenance</font></TH></TR>
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE>
+																#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/provenance/prov_process_id" $item "")
+									</TABLE>
+								</TD>
+							</TR>
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE><TR><TD>
+										#foreach($prov_processStep_4_COUNTER in [0..5])
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER] -->
+											<TABLE>
+												<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]</font></TH></TR>
+												<TR>
+													<TD align="left" valign="top">
+														<TABLE>
+															<TR><TD>program</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/program" $item "" $vr)</TD></TR>
+															<TR><TD>program/version</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/program/version" $item "" $vr)</TD></TR>
+															<TR><TD>program/arguments</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/program/arguments" $item "" $vr)</TD></TR>
+															<TR><TD>timestamp</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/timestamp" $item "" $vr)</TD></TR>
+															<TR><TD>cvs</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/cvs" $item "" $vr)</TD></TR>
+															<TR><TD>user</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/user" $item "" $vr)</TD></TR>
+															<TR><TD>machine</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/machine" $item "" $vr)</TD></TR>
+															<TR><TD>platform</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/platform" $item "" $vr)</TD></TR>
+															<TR><TD>platform/version</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/platform/version" $item "" $vr)</TD></TR>
+															<TR><TD>compiler</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/compiler" $item "" $vr)</TD></TR>
+															<TR><TD>compiler/version</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/compiler/version" $item "" $vr)</TD></TR>
+																					#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/prov_processStep_id" $item "")
+														</TABLE>
+													</TD>
+												</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/library -->
+												<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/library</font></TH></TR>
+												<TR>
+													<TD align="left" valign="top">
+														<TABLE>
+															<TR>
+																<TD>library</TD>
+																<TD>version</TD>
+															</TR>
+															#foreach($prov_processStep_library_5_COUNTER in [0..5])
+																<TR>
+																	<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/library[$prov_processStep_library_5_COUNTER]/library" $item "" $vr)</TD>
+																	<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/library[$prov_processStep_library_5_COUNTER]/version" $item "" $vr)</TD>
+																	#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/library[$prov_processStep_library_5_COUNTER]/prov_processStep_library_id" $item "")
+																</TR>
+															#end
+														</TABLE>
+													</TD>
+												</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER]/library -->
+											</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/provenance/processStep[$prov_processStep_4_COUNTER] -->
+										#end
+									</TD></TR></TABLE>
+								</TD>
+							</TR>
+						</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/provenance -->
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/investigator -->
+						<TABLE>
+							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/investigator</font></TH></TR>
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE>
+										<TR><TD>title</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/title" $item "" $vr)</TD></TR>
+										<TR><TD>firstname</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/firstname" $item "" $vr)</TD></TR>
+										<TR><TD>lastname</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/lastname" $item "" $vr)</TD></TR>
+										<TR><TD>institution</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/institution" $item "" $vr)</TD></TR>
+										<TR><TD>department</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/department" $item "" $vr)</TD></TR>
+										<TR><TD>email</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/email" $item "" $vr)</TD></TR>
+										<TR><TD>phone</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/phone" $item "" $vr)</TD></TR>
+										<TR><TD>ID</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/investigator/ID" $item "" $vr)</TD></TR>
+																#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/investigator/xnat_investigatorData_id" $item "")
+									</TABLE>
+								</TD>
+							</TR>
+						</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/investigator -->
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/validation -->
+						<TABLE>
+							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/validation</font></TH></TR>
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE>
+										<TR><TD>method</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/validation/method" $item "" $vr)</TD></TR>
+										<TR><TD>date</TD><TD>#xdatDateBox("riiplqa:NormVbm8vPCASLData/validation/date" $item $vr $years)</TD></TR>
+										<TR><TD>notes</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/validation/notes" $item "" $vr)</TD></TR>
+										<TR><TD>validated_by</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/validation/validated_by" $item "" $vr)</TD></TR>
+										<TR><TD>status</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/validation/status" $item "" $vr)</TD></TR>
+																#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/validation/xnat_validationData_id" $item "")
+									</TABLE>
+								</TD>
+							</TR>
+						</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/validation -->
+					</TD>
+				</TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#foreach($xnat_abstractResource_7_COUNTER in [0..5])
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER] -->
+								<TABLE>
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/note" $item "" $vr)</TD></TR>
+												<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/label" $item "" $vr)</TD></TR>
+												<TR><TD>file_count</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/file_count" $item "" $vr)</TD></TR>
+												<TR><TD>file_size</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/file_size" $item "" $vr)</TD></TR>
+																		#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/xnat_abstractResource_id" $item "")
+											</TABLE>
+										</TD>
+									</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag -->
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR>
+													<TD>tag</TD>
+													<TD>name</TD>
+												</TR>
+												#foreach($xnat_abstractResource_tag_8_COUNTER in [0..5])
+													<TR>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag[$xnat_abstractResource_tag_8_COUNTER]/tag" $item "" $vr)</TD>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag[$xnat_abstractResource_tag_8_COUNTER]/name" $item "" $vr)</TD>
+														#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag[$xnat_abstractResource_tag_8_COUNTER]/xnat_abstractResource_tag_id" $item "")
+													</TR>
+												#end
+											</TABLE>
+										</TD>
+									</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag -->
+								</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/resources/resource[$xnat_abstractResource_7_COUNTER] -->
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/fields/field -->
+				<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/fields/field</font></TH></TR>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE>
+							<TR>
+								<TD>field</TD>
+								<TD>name</TD>
+							</TR>
+							#foreach($xnat_experimentData_field_8_COUNTER in [0..5])
+								<TR>
+									<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/fields/field[$xnat_experimentData_field_8_COUNTER]/field" $item "" $vr)</TD>
+									<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/fields/field[$xnat_experimentData_field_8_COUNTER]/name" $item "" $vr)</TD>
+									#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/fields/field[$xnat_experimentData_field_8_COUNTER]/xnat_experimentData_field_id" $item "")
+								</TR>
+							#end
+						</TABLE>
+					</TD>
+				</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/fields/field -->
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE><TR><TD>
+							#foreach($riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER in [0..5])
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER] -->
+								<TABLE>
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR><TD>qcImage</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/qcImage" $item "" $vr)</TD></TR>
+												<TR><TD>quality</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/quality" $item "" $vr)</TD></TR>
+												<TR><TD>username</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/username" $item "" $vr)</TD></TR>
+												<TR><TD>date</TD><TD>#xdatDateBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/date" $item $vr $years)</TD></TR>
+												<TR><TD>time</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/time" $item "" $vr)</TD></TR>
+												<TR><TD>comments</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/comments" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtImage</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtImage" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtFile</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtFile" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtQuality</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtQuality" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtDate</TD><TD>#xdatDateBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtDate" $item $vr $years)</TD></TR>
+												<TR><TD>mvmtTime</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtTime" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtMaxX</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtMaxX" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtMaxY</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtMaxY" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtMaxZ</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtMaxZ" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtMaxPitch</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtMaxPitch" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtMaxRoll</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtMaxRoll" $item "" $vr)</TD></TR>
+												<TR><TD>mvmtMaxYaw</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/mvmtMaxYaw" $item "" $vr)</TD></TR>
+																		#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/riiplqa_NormVbm8vPCASLData_qcSession_id" $item "")
+											</TABLE>
+										</TD>
+									</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData -->
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR>
+													<TD>file</TD>
+													<TD>date</TD>
+													<TD>time</TD>
+													<TD>quality</TD>
+												</TR>
+												#foreach($riiplqa_NormVbm8vPCASLData_qcSession_imgData_9_COUNTER in [0..5])
+													<TR>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData[$riiplqa_NormVbm8vPCASLData_qcSession_imgData_9_COUNTER]/file" $item "" $vr)</TD>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData[$riiplqa_NormVbm8vPCASLData_qcSession_imgData_9_COUNTER]/date" $item "" $vr)</TD>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData[$riiplqa_NormVbm8vPCASLData_qcSession_imgData_9_COUNTER]/time" $item "" $vr)</TD>
+														<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData[$riiplqa_NormVbm8vPCASLData_qcSession_imgData_9_COUNTER]/quality" $item "" $vr)</TD>
+														#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData[$riiplqa_NormVbm8vPCASLData_qcSession_imgData_9_COUNTER]/riiplqa_NormVbm8vPCASLData_qcSession_imgData_id" $item "")
+													</TR>
+												#end
+											</TABLE>
+										</TD>
+									</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/imgData -->
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE><TR><TD>
+												#foreach($riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER in [0..5])
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER] -->
+													<TABLE>
+														<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]</font></TH></TR>
+														<TR>
+															<TD align="left" valign="top">
+																<TABLE>
+																	<TR><TD>file</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/file" $item "" $vr)</TD></TR>
+																	<TR><TD>filedate</TD><TD>#xdatDateBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/filedate" $item $vr $years)</TD></TR>
+																	<TR><TD>filetime</TD><TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/filetime" $item "" $vr)</TD></TR>
+																	<TR><TD>quality</TD><TD>#xdatStringBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/quality" $item "" $vr)</TD></TR>
+																							#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/riiplqa_NormVbm8vPCASLData_qcSession_tisData_id" $item "")
+																</TABLE>
+															</TD>
+														</TR>
+<!-- BEGIN riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue -->
+														<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue</font></TH></TR>
+														<TR>
+															<TD align="left" valign="top">
+																<TABLE>
+																	<TR>
+																		<TD>imageFile</TD>
+																		<TD>imageType</TD>
+																		<TD>gm</TD>
+																		<TD>wm</TD>
+																		<TD>csf</TD>
+																		<TD>gmThresh</TD>
+																		<TD>wmThresh</TD>
+																		<TD>csfThresh</TD>
+																	</TR>
+																	#foreach($riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER in [0..5])
+																		<TR>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/imageFile" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/imageType" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/gm" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/wm" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/csf" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/gmThresh" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/wmThresh" $item "" $vr)</TD>
+																			<TD>#xdatTextBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/csfThresh" $item "" $vr)</TD>
+																			#xdatHiddenBox("riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_10_COUNTER]/riiplqa_NormVbm8vPCASLData_qcSession_tisData_tissue_id" $item "")
+																		</TR>
+																	#end
+																</TABLE>
+															</TD>
+														</TR>
+<!-- END riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER]/tissue -->
+													</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER]/tisData[$riiplqa_NormVbm8vPCASLData_qcSession_tisData_9_COUNTER] -->
+												#end
+											</TD></TR></TABLE>
+										</TD>
+									</TR>
+								</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData/qcSession[$riiplqa_NormVbm8vPCASLData_qcSession_8_COUNTER] -->
+							#end
+						</TD></TR></TABLE>
+					</TD>
+				</TR>
+			</TABLE>
+<!-- END riiplqa:NormVbm8vPCASLData -->
+		</TD>
+	</TR>
+	<TR>
+		<TD>
+		#xdatEditProps($item $edit_screen)
+		<TR><TD COLSPAN=2 ALIGN=left><input type="button" ONCLICK="validateForm();"  name="eventSubmit_doInsert" value="Submit"/></TD></TR>
+		</TD>
+	</TR>
+</TABLE>
+</form>
+
+<script type="text/javascript">
+function validateForm()
+{
+   //INSERT CUSTOM CONTENT HERE
+
+   validateExperimentForm();
+   return false;
+}
+</script>

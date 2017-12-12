@@ -1,0 +1,75 @@
+
+<div class="advanced-search-fields autogen"><div class="search-group by-criteria"><h3><label>Search by Criteria <input type="checkbox" class="search-method by-criteria" value="by-criteria"></label></h3>
+<div class="search-item">
+<h5>Session:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("SESSION_ID"))
+</div>
+<div class="search-item">
+<h5>Subject:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("SUBJECT_ID"))
+</div>
+<div class="search-item">
+<h5>MR Date:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("MR_DATE"))
+</div>
+<div class="search-item">
+<h5>ID:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("EXPT_ID"))
+</div>
+<div class="search-item">
+<h5>Date:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("DATE"))
+</div>
+<div class="search-item">
+<h5>Age:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("AGE"))
+</div>
+<div class="search-item">
+<h5>Project:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("PROJECT"))
+</div>
+<div class="search-item">
+<h5>Inserted:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("INSERT_DATE"))
+</div>
+<div class="search-item">
+<h5>Creator:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("INSERT_USER"))
+</div>
+<div class="search-item">
+<h5>subject:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("SUBJECT"))
+</div>
+<div class="search-item">
+<h5>user:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("REVIEW_USER"))
+</div>
+<div class="search-item">
+<h5>date:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("REVIEW_DATE"))
+</div>
+<div class="search-item">
+<h5>overall status:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("REVIEW_STATUS"))
+</div>
+<div class="search-item">
+<h5>GM:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("VBM8_GM"))
+</div>
+<div class="search-item">
+<h5>WM:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("VBM8_WM"))
+</div>
+<div class="search-item">
+<h5>CSF:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("VBM8_CSF"))
+</div>
+<div class="search-item">
+<h5>wQUALITY:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("VBM8_wQUALITY"))
+</div>
+<div class="search-item">
+<h5>Warped File Status:</h5>
+#xdatSearchField($schemaElement $schemaElement.getDisplayField("VBM8_warpedFilesStatus"))
+</div>
+<div class="clear"></div></div></div>

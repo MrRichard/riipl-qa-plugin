@@ -1,8 +1,7 @@
-package edu.wfubmc.riipl;
+package edu.wfubmc.riiplqa;
 
 //XNAT imports
 import org.nrg.xft.ItemI;
-//import org.nrg.xft.XFTItem;
 
 /** A class for QC Utilities common to the somewhat standard image QC framework
 * @author Ben Wagner

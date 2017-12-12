@@ -1,6 +1,4 @@
-//Comment out the package line when testing this code
-//in the /riipl30/bwagner/incoming/niftiSnapshot directory
-package edu.wfubmc.riipl;
+package edu.wfubmc.riiplqa;
 
 import java.util.Arrays;
 import java.util.ArrayList;

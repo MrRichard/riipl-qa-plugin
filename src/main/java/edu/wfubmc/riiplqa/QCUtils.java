@@ -1,11 +1,10 @@
-package edu.wfubmc.riipl;
+package edu.wfubmc.riiplqa;
 
 // Java 
 import java.io.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.net.URI;
-import edu.wfubmc.riipl.RiiplDebug;
 
 // other important
 import org.apache.commons.io.IOUtils;
@@ -58,6 +57,8 @@ import org.nrg.xdat.services.AliasTokenService;
 import org.nrg.xdat.entities.AliasToken;
 import org.nrg.xft.ItemI;
 import org.nrg.xft.security.UserI;
+
+import edu.wfubmc.riiplqa.RiiplDebug;
 
 
 /** A class for QC Utilities common to the somewhat standard image QC framework

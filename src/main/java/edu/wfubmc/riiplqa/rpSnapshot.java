@@ -1,6 +1,6 @@
 //Comment out the package line when testing this code
 //in the /riipl30/bwagner/incoming/rpSnapshot directory
-package edu.wfubmc.riipl;
+package edu.wfubmc.riiplqa;
 
 import java.io.BufferedReader;
 import java.io.File;
