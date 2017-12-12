@@ -1,0 +1,1168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://riipl.wfubmc.edu/riipl" xmlns:riipl="http://riipl.wfubmc.edu/riipl" xmlns:xdat="http://nrg.wustl.edu/xdat" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xnat="http://nrg.wustl.edu/xnat" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://nrg.wustl.edu/xnat" schemaLocation="../xnat/xnat.xsd"/>
+	<xs:element name="vbmVolumetrics"            type="riipl:vbmVolumetricsData"/>
+	<xs:element name="SegSpm8NewSeg"             type="riipl:SegSpm8NewSegData"/>
+	<xs:element name="SegVbm8"                   type="riipl:SegVbm8Data"/>
+	<xs:element name="NormVbm8PASL"              type="riipl:NormVbm8PASLData"/>
+	<xs:element name="NormVbm8PCASL"             type="riipl:NormVbm8PCASLData"/>
+	<xs:element name="NormVbm8vPCASL"            type="riipl:NormVbm8vPCASLData"/>
+	<xs:element name="NormVbm8PCASL2"            type="riipl:NormVbm8PCASL2Data"/>
+	<xs:element name="NormVbm8PCASL8"            type="riipl:NormVbm8PCASL8Data"/>
+	<xs:element name="NormVbm8PCASLbh"           type="riipl:NormVbm8PCASLbhData"/>
+	<xs:element name="NormVbm8DTI"               type="riipl:NormVbm8DTIData"/>
+	<xs:element name="NormVbm8DKI"               type="riipl:NormVbm8DKIData"/>
+	<xs:element name="NormVbm8DKE"               type="riipl:NormVbm8DKEData"/>
+	<xs:element name="NormVbm8MTR"               type="riipl:NormVbm8MTRData"/>
+	<xs:element name="NormVbm8LST8"              type="riipl:NormVbm8LST8Data"/>
+	<xs:element name="vbm8_covariance"           type="riipl:vbm8_covData"/>
+
+	<xs:complexType name="vbmVolumetricsData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>Volumes of Segmented Images</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="originalImage" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field>
+									<xdat:relation uniqueComposite="ORIG_NAME"/>
+								</xdat:field>
+							</xs:appinfo>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="segmentedImage" minOccurs="0" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:appinfo>
+											<xdat:field>
+												<xdat:relation uniqueComposite="SEG_NAME"/>
+											</xdat:field>
+										</xs:appinfo>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:attribute name="filename" type="xs:string">
+											<xs:annotation>
+												<xs:appinfo>
+													<xdat:field uniqueComposite="SEG_NAME"/>
+												</xs:appinfo>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="tissueType" type="xs:string"/>
+										<xs:attribute name="normalization" type="xs:string"/>
+										<xs:attribute name="volume" type="xs:float"/>
+										<xs:attribute name="units" type="xs:string"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="filename" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field uniqueComposite="ORIG_NAME"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="SegSpm8NewSegData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>SPM 8 New Segmention Image QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="tissueType" type="xs:string"/>
+													<xs:attribute name="mean" type="xs:float"/>
+													<xs:attribute name="stdDev" type="xs:float"/>
+													<xs:attribute name="min" type="xs:float"/>
+													<xs:attribute name="max" type="xs:float"/>
+													<xs:attribute name="nVoxels" type="xs:integer"/>
+													<xs:attribute name="gmThreshold" type="xs:float"/>
+													<xs:attribute name="gmMin" type="xs:float"/>
+													<xs:attribute name="gmMax" type="xs:float"/>
+													<xs:attribute name="wmThreshold" type="xs:float"/>
+													<xs:attribute name="wmMin" type="xs:float"/>
+													<xs:attribute name="wmMax" type="xs:float"/>
+													<xs:attribute name="csfThreshold" type="xs:float"/>
+													<xs:attribute name="csfMin" type="xs:float"/>
+													<xs:attribute name="csfMax" type="xs:float"/>
+													<xs:attribute name="snr" type="xs:float"/>
+													<xs:attribute name="segImg" type="xs:string"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="parameter" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="SegVbm8Data">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Segmention Image QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8PASLData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of PASL QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8PCASLData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of PCASL QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8vPCASLData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of Variable TR PCASL QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8PCASL2Data">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of 2 Phase PCASL QA Report (2 Phases of 8 Phase for comparison to regular PCASL)</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8PCASL8Data">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of 8 Phase PCASL QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8PCASLbhData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of PCASL Breath Hold QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="NormVbm8DTIData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of DTI QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<!--DTI will not use these....
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							-->
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8DKIData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of DKI QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<!--DTI will not use these....
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							-->
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8DKEData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of DKE QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<!--DTI will not use these....
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							-->
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NormVbm8MTRData">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of MTR QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="NormVbm8LST8Data">
+		<!--changes to VBM8 QC for normalized types should be reflected in all VBM8 normalized types-->
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>VBM 8 Normalization of LST8 QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="wbData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="whlBrn" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="wb" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+							<!--movement parameters are "optional" to AnsirVbm8Utils.normalizationQC. 
+							If they are not not to be used for this datatype, please comment them out.
+							This does not mean the USE fields are optional.  ~~although they
+							may have to be set optional until the database is cleaned up~~
+							DO NOT DELETE!!-->
+							<!--LST8 WILL NOT USE THESE
+							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtFile" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtQuality" type="xs:string" use="optional"/>
+							<xs:attribute name="mvmtDate" type="xs:date" use="optional"/>
+							<xs:attribute name="mvmtTime" type="xs:time" use="optional"/>
+							<xs:attribute name="mvmtMaxX" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxY" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxZ" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxPitch" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxRoll" type="xs:float" use="optional"/>
+							<xs:attribute name="mvmtMaxYaw" type="xs:float" use="optional"/>
+-->
+							<!--end of movement parameters-->
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="seriesReportData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>Listing of series acquired at scanner</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="series" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="number" type="xs:integer"/>
+							<xs:attribute name="name" type="xs:string"/>
+							<xs:attribute name="numOfImages" type="xs:integer"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="procReportData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>Processing Report of data</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="studyPath" type="xs:string"/>
+					<xs:element name="seriesList" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="series" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="number" type="xs:integer"/>
+										<xs:attribute name="name" type="xs:string"/>
+										<xs:attribute name="numOfImages" type="xs:integer"/>
+										<xs:attribute name="storedLocally" type="xs:boolean"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="preprocessing" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="processingHost" type="xs:string"/>
+								<xs:element name="processingDetail" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="processStep" type="xs:string"/>
+										<xs:attribute name="startDate" type="xs:date"/>
+										<xs:attribute name="startTime" type="xs:time"/>
+										<xs:attribute name="endDate" type="xs:date"/>
+										<xs:attribute name="endTime" type="xs:time"/>
+										<xs:attribute name="elapsedTime" type="xs:time"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="processing" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="processingType" type="xs:string"/>
+								<xs:element name="logFile" type="xs:string"/>
+								<xs:element name="processingDetail" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="processStep" type="xs:string"/>
+										<xs:attribute name="startDate" type="xs:date"/>
+										<xs:attribute name="startTime" type="xs:time"/>
+										<xs:attribute name="endDate" type="xs:date"/>
+										<xs:attribute name="endTime" type="xs:time"/>
+										<xs:attribute name="elapsedTime" type="xs:time"/>
+										<xs:attribute name="processingHost" type="xs:string"/>
+										<xs:attribute name="status" type="xs:string"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="vbm8_covData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>Covariance QC form the VBM8 cg_check_cov function.</xs:documentation>
+					<xs:appinfo>
+						<xdat:element storeHistory="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:sequence>
+					<!-- all elements are optional to make creating/sending via REST easier -->
+					<xs:element name="fileName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="covHis" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="covItem" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="mean_covariance" type="xs:float" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="covarianceDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="covarianceTime" type="xs:time" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="fileDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="fileTime" type="xs:time" minOccurs="0" maxOccurs="1"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="stsHis" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="stsItem" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="status" type="xs:string" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="statusUser" type="xs:string" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="statusDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="statusTime" type="xs:time" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="covarianceDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="covarianceTime" type="xs:time" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="isBad" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="isDuplicate" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+											<xs:element name="dupList" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="fileName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+														<xs:element name="covariance" type="xs:float" minOccurs="0" maxOccurs="1"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+</xs:schema>

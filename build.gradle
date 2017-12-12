@@ -1,5 +1,5 @@
 /*
- * xnat-template: build.gradle
+ * riipl-qa-plugin: build.gradle
  * XNAT http://www.xnat.org
  * Copyright (c) 2017, Washington University School of Medicine
  * All Rights Reserved
@@ -9,7 +9,6 @@
 
 import org.gradle.internal.jvm.Jvm
 
-// TODO: This block is required for the 'xnat-data-builder' plugin to function.
 buildscript {
     ext {
         vXnat = '1.7.4'
@@ -33,9 +32,8 @@ buildscript {
     }
 }
 
-// TODO: Change the group and version to values appropriate for your plugin project.
 group 'org.nrg.xnat.plugins'
-version '1.0.0-SNAPSHOT'
+version '0.1'
 
 // TODO: This is the minimum set of Gradle plugins required to build most XNAT plugins. You may include many others, including plugins for testing and test coverage, IDE integration, and more.
 apply plugin: 'io.spring.dependency-management'

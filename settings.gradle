@@ -8,4 +8,4 @@
  */
 
 // TODO: Replace this with your project name.
-rootProject.name = 'xnat-template'
+rootProject.name = 'riipl-qa-plugin'

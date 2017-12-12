@@ -6,3 +6,7 @@
 /.idea
 src/beans
 src/generated
+/bin/
+.classpath
+.settings
+.project
