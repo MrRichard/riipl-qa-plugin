@@ -97,6 +97,9 @@ dependencies {
         transitive = false
     }
     
+    // https://mvnrepository.com/artifact/ecs/ecs
+	compile group: 'ecs', name: 'ecs', version: '1.4.2'
+    
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore
 	compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3.2'
 	
@@ -130,6 +133,25 @@ dependencies {
     implementation "log4j:log4j"
     implementation "io.springfox:springfox-swagger2"
 }
+
+configurations {
+    compile.extendsFrom(compileAndInclude)
+}
+
+task fatJar(type: Jar) {
+    zip64 true
+    classifier = "fat"
+    from {
+        configurations.compileAndInclude.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    with jar
+}
+
+
 
 // TODO: If the compiler is Java 8 or later, this checks for a Java 7 version of the primary Java run-time library. Building with post-Java 7 libraries can result in occasional compatibility issues.
 def javaVersion = Jvm.current().javaVersion

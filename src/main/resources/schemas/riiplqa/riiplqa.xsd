@@ -5,6 +5,7 @@ targetNamespace="http://riipl.wfubmc.edu/riiplqa" xmlns:riiplqa="http://riipl.wf
 	<xs:import namespace="http://nrg.wustl.edu/xnat" schemaLocation="../xnat/xnat.xsd"/>
 	
 	<xs:element name="SegVbm8"                   type="riiplqa:SegVbm8Data"/>
+	<xs:element name="SegSpm8NewSeg"             type="riiplqa:SegSpm8NewSegData"/>
 	<xs:element name="NormVbm8PASL"              type="riiplqa:NormVbm8PASLData"/>
 	<xs:element name="NormVbm8PCASL"             type="riiplqa:NormVbm8PCASLData"/>
 	<xs:element name="NormVbm8vPCASL"            type="riiplqa:NormVbm8vPCASLData"/>
@@ -23,6 +24,56 @@ targetNamespace="http://riipl.wfubmc.edu/riiplqa" xmlns:riiplqa="http://riipl.wf
 			<xs:extension base="xnat:mrAssessorData">
 				<xs:annotation>
 					<xs:documentation>VBM 8 Segmention Image QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="SegSpm8NewSegData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>SPM 8 New Segmention Image QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
