@@ -1,0 +1,82 @@
+#macro ( includeXtk )
+##      <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script><!-- must go before omUtils -->
+        <!-- must go before omUtils -->
+        <script type="text/javascript" src="http://ansirxnat.medeng.wfubmc.edu/X/lib/google-closure-library/closure/goog/base.js"></script>
+        <script type="text/javascript" src="http://ansirxnat.medeng.wfubmc.edu/X/xtk-deps.js"></script>
+        <script type="text/javascript">
+
+                // include all used X-classes here
+                // this is only required when using the xtk-deps.js file
+                goog.require('X.renderer2D');
+                goog.require('X.renderer3D');
+
+                function addLoadEvent(func) {
+                        var oldonload = window.onload;
+                        if (typeof window.onload != 'function') {
+                                window.onload = func;
+                        } else {
+                                window.onload = function() {
+                                        if (oldonload) {
+                                                oldonload();
+                                        }
+                                        func();
+                                }
+                        }
+                }
+        </script>
+#end
+#macro ( includeXtkDevel )
+##      <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script><!-- must go before omUtils -->
+        <!-- must go before omUtils -->
+        <script type="text/javascript" src="http://ansirxnat.medeng.wfubmc.edu/Xdevel/lib/google-closure-library/closure/goog/base.js"></script>
+        <script type="text/javascript" src="http://ansirxnat.medeng.wfubmc.edu/Xdevel/xtk-deps.js"></script>
+        <script type="text/javascript">
+
+                // include all used X-classes here
+                // this is only required when using the xtk-deps.js file
+                goog.require('X.renderer2D');
+                goog.require('X.renderer3D');
+
+                function addLoadEvent(func) {
+                        var oldonload = window.onload;
+                        if (typeof window.onload != 'function') {
+                                window.onload = func;
+                        } else {
+                                window.onload = function() {
+                                        if (oldonload) {
+                                                oldonload();
+                                        }
+                                        func();
+                                }
+                        }
+                }
+        </script>
+#end
+
+#macro ( newVolumeAnd2DSlice $volumeVar $sliceVar $fileUrl $idBase)
+        ${sliceVar} = new X.renderer2D();
+        ${sliceVar}.container = '$idBase';
+        ${sliceVar}.orientation = 'AXIAL';
+        ${sliceVar}.init();
+
+        ${volumeVar} = new X.volume();
+        #if ($fn.toLowerCase().contains('_cbf'))
+                ${volumeVar}.file = '$fileUrl';
+                ${volumeVar}.labelmap.file = '$fileUrl';
+                ${volumeVar}.labelmap.colortable.file = '/xnat/misc_ansir/ASL_colormap.txt';
+        #elseif ($fn.toLowerCase().contains('_att'))
+                ${volumeVar}.file = '$fileUrl';
+                ${volumeVar}.labelmap.file = '$fileUrl';
+                ${volumeVar}.labelmap.colortable.file = '/xnat/misc_ansir/ATT_colormap.txt';
+        #elseif ($fn.toLowerCase().contains('_lesion_'))
+                ${volumeVar}.file = '$flair';
+                ${volumeVar}.labelmap.file = '$fileUrl';
+                ${volumeVar}.labelmap.colortable.file = '/xnat/misc_ansir/LST8_colormap.txt';
+        #else
+                ${volumeVar}.file = '$fileUrl';
+        #end
+
+        ${sliceVar}.add(${volumeVar});
+        ${sliceVar}.render();
+#end
+
