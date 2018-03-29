@@ -1,21 +1,183 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
-$page.setTitle("XDAT")
+$page.setTitle("EDIT SegCat12 Details")
 $page.setLinkColor($ui.alink)
 $page.setVlinkColor($ui.vlink)
 
 #set($months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
 #set($days = [ 1..31 ])
 #set($years = [ $!turbineUtils.getYear()..1900])
-#set($ratings = ["Excellent" , "Acceptable" , "Questionable" , "Unusable" , "Missing" , "Not Read" ])
+#set($finalStatus = ["unread", "good", "bad", "structural anomaly","followup"])
+#set($status = ["unread", "good", "bad", "followup"])
 #set($fullname = "$user.Firstname $user.Lastname")
-#set ($project = $!item.getProperty("riiplqa:SegCat12Data/project"))
-#set ($subject = $!item.getProperty("riiplqa:SegCat12Data/subject"))
-#set ($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
+#set($project = $!item.getProperty("riiplqa:SegCat12Data/project"))
+#set($subject = $!item.getProperty("riiplqa:SegCat12Data/subject"))
+#set($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
 
-#macro (riiplShowDate $name $item $vr $years)
-	$turbineUtils.formatDate($item.getProperty($name),'EEE MMM dd, yyyy')
+#macro ( includeXtk )
+	<script type="text/javascript" src="http://get.goXTK.com/xtk.js"></script>
+	<script type="text/javascript">
+		function addLoadEvent(func) {
+				var oldonload = window.onload;
+				if (typeof window.onload != 'function') {
+					window.onload = func;
+				} else {
+					window.onload = function() {
+						if (oldonload) {
+							oldonload();
+						}
+						func();
+					}
+				}
+			}
+	</script>
+#end
+
+#macro ( newVolumeAnd2DSlice $volumeVar $sliceVar $fileUrl $idBase)
+	${sliceVar} = new X.renderer2D();
+	${sliceVar}.container = '$idBase';
+	${sliceVar}.orientation = 'Z';
+	${sliceVar}.init();
+
+	${volumeVar} = new X.volume();
+	#if ($fn.toLowerCase().contains('_cbf'))
+		${volumeVar}.file = '$fileUrl';
+		${volumeVar}.labelmap.file = '$fileUrl';
+		##${volumeVar}.labelmap.colortable.file = '/xnat/misc_riipl/ASL_colormap.txt';
+	#elseif ($fn.toLowerCase().contains('_att'))
+		${volumeVar}.file = '$fileUrl';
+		${volumeVar}.labelmap.file = '$fileUrl';
+		##${volumeVar}.labelmap.colortable.file = '/xnat/misc_riipl/ATT_colormap.txt';
+	#elseif ($fn.toLowerCase().contains('_lesion_'))
+		${volumeVar}.file = '$flair';
+		${volumeVar}.labelmap.file = '$fileUrl';
+		##${volumeVar}.labelmap.colortable.file = '/xnat/misc_riipl/LST8_colormap.txt';
+	#else
+		${volumeVar}.file = '$fileUrl';
+	#end
+
+	${sliceVar}.add(${volumeVar});
+	${sliceVar}.render();
+#end
+
+#macro ( riiplBooleanRadioYesNoWithoutDefault $name $item $vr)
+	#set($value = "$!item.getBooleanProperty($name)")
+	#if ($value == "true")
+	<input type="checkbox" disabled="disabled" checked="checked"/>&nbsp;yes
+	<input type="checkbox" disabled="disabled" />&nbsp;no
+	#elseif ($value == "false")
+	<input type="checkbox" disabled="disabled" />&nbsp;yes
+	<input type="checkbox" disabled="disabled" checked="checked"/>&nbsp;no
+	#else
+	<input type="checkbox" disabled="disabled" />&nbsp;yes
+	<input type="checkbox" disabled="disabled" />&nbsp;no
+	#end
+	<input type="hidden" name="$name" value="$value"/>
+#end
+
+#macro ( riiplHiddenTimestamp $name $item $default )
+	<input id="$name" type="hidden" name="$name" value="$turbineUtils.formatDate($item.getProperty($name),'yyyy-MM-dd')T$turbineUtils.formatDate($item.getProperty($name),'HH:mm:ss')"></input>
+#end
+
+#macro ( riiplShowString $name $item $default $vr )
+	$!item.getProperty($name)
+	#xdatHiddenBox($name $item $default)
+#end
+
+#macro ( riiplShowDate $name $item $vr $years)
+	$turbineUtils.formatDate($item.getProperty($name),'EEE MMM dd, yyyy') 
 	<input id="$name" type="hidden" name="$name" value="$turbineUtils.formatDate($item.getProperty($name),'yyyy-MM-dd')" />
 #end
+
+#macro ( riiplShowTime $name $item $vr $years)
+	$turbineUtils.formatDate($item.getProperty($name),'HH:mm:ss') 
+	<input id="$name" type="hidden" name="$name" value="$turbineUtils.formatDate($item.getProperty($name),'HH:mm:ss')" />
+#end
+
+#macro ( riiplShowTimestamp $name $item $vr $years)
+	$turbineUtils.formatDate($item.getProperty($name),'EEE MMM dd, yyyy HH:mm:ss')
+	#riiplHiddenTimestamp($name $item "")
+#end
+
+## Make sure that the "$value" variable is in quotes ""
+## Using an odd mathTool min === thresh because > is not available for Doubles
+## Using an odd mathTool min === thresh because > is not available for Doubles
+## The checking againsts max(thresh,thresh) is because of some odd type comparisons
+#macro( highlightGreaterThanCell $name $item $default $vr $value $color $cellStyle)
+	#set ( $thresh = $mathTool.toDouble($value) )
+	#set ( $v      = $mathTool.toDouble($!item.getProperty($name)) )
+	#if ( $mathTool.min($thresh,$v) == $mathTool.min($thresh,$thresh))
+		<TD ${cellStyle} bgcolor="${color}" >#riiplShowString($name $item $default $vr) &gt $thresh</TD>
+	#else
+		<TD ${cellStyle}>#riiplShowString($name $item $default $vr)</TD>
+	#end
+#end
+
+## Make sure that the "$value" variable is in quotes ""
+## Using an odd mathTool min === thresh because > is not available for Doubles
+## The checking againsts max(thresh,thresh) is because of some odd type comparisons
+#macro( highlightGreaterThanLessThanCell $name $item $default $vr $valueHi $valueLo $color $cellStyle)
+	#set ( $threshHi = $mathTool.toDouble($valueHi) )
+	#set ( $threshLo = $mathTool.toDouble($valueLo) )
+	#set ( $v      = $mathTool.toDouble($!item.getProperty($name)) )
+	#if ( $mathTool.min($threshLo,$v) == $mathTool.min($threshLo,$threshLo))
+		#if ( $mathTool.max($threshHi,$v) == $mathTool.max($threshHi,$threshHi))
+			<TD ${cellStyle}>#riiplShowString($name $item $default $vr)</TD>
+		#else
+			<TD ${cellStyle} bgcolor="${color}" >Hi: #riiplShowString($name $item $default $vr) &gt; $threshHi</TD>
+		#end
+	#else
+		<TD ${cellStyle} bgcolor="${color}" >Low: #riiplShowString($name $item $default $vr) &lt; $threshLo</TD>
+	#end
+#end
+
+
+## BASE IS THE PART BEFORE [someindeX]
+## NAME IS THE PART AFTER [someindeX]
+#macro( highlightDifferentDate $base $sX $name $item $vr $years $color)
+	#set ( $sY = $sX - 1 )
+	#set ( $oldName = "$base[$sY]$name" )
+	#set ( $newName = "$base[$sX]$name" )
+	#set ( $vOld = $item.getProperty($oldName) )
+	#set ( $vNew = $item.getProperty($newName) )
+	#if ($sX == 0)
+		#riiplShowDate($newName $item $vr $years) 
+	#else
+		#if ($vOld)
+			##using turbinUtils here becuase sometimes dats are different types of objects (java.util.date or java.sql.date)
+			##or the data contains seconds
+			#if ( $turbineUtils.formatDate($vOld,'EEE MMM dd, yyyy') != $turbineUtils.formatDate($vNew,'EEE MMM dd, yyyy') )
+				<span style="background-color: ${color};" >#riiplShowDate($newName $item $vr $years)</span>
+			#else
+				#riiplShowDate($newName $item $vr $years)
+			#end
+		#else
+			#riiplShowDate($newName $item $vr $years) 
+		#end
+	#end
+#end
+
+## BASE IS THE PART BEFORE [someindeX]
+## NAME IS THE PART AFTER [someindeX]
+#macro( highlightDifferentTime $base $sX $name $item $color)
+	#set ( $sY = $sX - 1 )
+	#set ( $oldName = "$base[$sY]$name" )
+	#set ( $newName = "$base[$sX]$name" )
+	#if ($sX == 0)
+		#riiplShowString( $newName $item "" "")
+	#else
+		#if ($item.getProperty($oldName))
+			#if ( $item.getProperty($oldName).toString() != $item.getProperty($newName).toString() )
+				<span style="background-color: ${color};" >#riiplShowString( $newName $item "" "")</span>
+			#else
+				#riiplShowString( $newName $item "" "")
+			#end
+		#else
+			#riiplShowString( $newName $item "" "")
+		#end
+	#end
+#end
+
+## COPIED FROM XDATSIMPLESELECTBOX....SEEMS TO HAVE BROKE FOR SOME REASON IN 1.6
 
 #macro (riiplSimpleSelectBoxLbl $lbl $name $item $possibleValues $vr)
 	#if ($vr)
@@ -23,7 +185,6 @@ $page.setVlinkColor($ui.vlink)
 			<span style="color:red;">&#8658</span>
 		#end
 	#end
-	
 	#if($item.isPKField($name)&& (!$vr.getField($name)))
 		<input ID="$name" type="hidden" name="$name" value="$item.getProperty($name)"/>
 		$item.getProperty($name)
@@ -48,7 +209,7 @@ $page.setVlinkColor($ui.vlink)
 #if ($data.message)
 	<font color="red" size="3">$data.message</font>
 #end
-
+#includeXtk()
 <script type="text/javascript" LANGUAGE="JavaScript" src="$content.getURI('scripts/omUtils.js')"> </script>
 <form ID="form1" name="form1" method="post" action="$link.setAction("ModifyImageAssessorData")">
 <input type="hidden" name="project" value="$!{project}" >
@@ -124,38 +285,9 @@ $page.setVlinkColor($ui.vlink)
 								</TD>
 							</TR>
 <!-- BEGIN riiplqa:SegCat12Data.qcSession[$qcSessionIndex] -->
-
-## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
-## ---===---===---===---===---===---===---===--- STATIC IMAGE  ---===---===---===---===---===---===---===---===---===---
-## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
-
-
-						#if ($item.getProperty("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/qcImage").length() > 0)
-							#set($qcImageHeight = $numOfImageData * 100)
-							<TR>
-								<TD>
-									<TABLE>
-										<TR>
-											<TD>
-											<div style="width:600px;overflow:scroll">
-													<a href="$content.getURI("/data/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/qcImage")">
-														<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/qcImage")">
-													</a>
-													#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].qcImage" $item "")
-													#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/riiplqa_SegCat12Data_qcSession_id" $item "")
-												</div>
-											</TD>
-										</TR>
-									</TABLE>
-								</TD>
-							</TR>
-<!-- END riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData -->
-									#else
-
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===--- XTK ADDITION  ---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
-
 							<TR>
 								<TD>
 									#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].qcImage" $item "")
@@ -184,7 +316,7 @@ $page.setVlinkColor($ui.vlink)
 															var slice_${idBase} = null;
 															var volume_${idBase} = null;
 															addLoadEvent(function () {
-																#set ($urlFile = $content.getURI("/REST/projects/").concat("$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/${niiDate}_${niiTime}/$fn") )
+																#set ($urlFile = $content.getURI("/REST/projects/").concat("$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$fn") )
 																#newVolumeAnd2DSlice( "volume_${idBase}" "slice_${idBase}" $urlFile $idBase)
 													
 																#if ($mainSlice == "")
@@ -213,7 +345,7 @@ $page.setVlinkColor($ui.vlink)
 									</TABLE>
 									<script type="text/javascript">
 										function setSagittal_${qcSessionIndex}() {
-											var orient='SAGITTAL';
+											var orient='X';
 											#foreach($indx in [0..$numOfImageData])
 												slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
 												volume_nii_${qcSessionIndex}_${indx}.modified();
@@ -222,7 +354,7 @@ $page.setVlinkColor($ui.vlink)
 											return false;
 										}
 										function setCoronal_${qcSessionIndex}() {
-											var orient='CORONAL';
+											var orient='Y';
 											#foreach($indx in [0..$numOfImageData])
 												slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
 												volume_nii_${qcSessionIndex}_${indx}.modified();
@@ -231,7 +363,7 @@ $page.setVlinkColor($ui.vlink)
 											return false;
 										}
 										function setAxial_${qcSessionIndex}() {
-											var orient='AXIAL';
+											var orient='Z';
 											#foreach($indx in [0..$numOfImageData])
 												slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
 												volume_nii_${qcSessionIndex}_${indx}.modified();
@@ -250,8 +382,6 @@ $page.setVlinkColor($ui.vlink)
 ## ---===---===---===---===---===---===---===--- XTK ADDITION END ===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
 
-									#end
-
 							<TR>
 								<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Image Quality (Images above are in the order of images below)</font></TH>
 							</TR>
@@ -266,10 +396,10 @@ $page.setVlinkColor($ui.vlink)
 										#foreach($imgDataIndex in [0..$numOfImageData])
 											<TR>
 												<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file" $item "" $vr)</TD>
-												<TD $style_cell_border>
-													#highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].date" $item $vr $years $errorColor)
-													#highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].time" $item $errorColor)
-													</TD>
+												<TD $style_cell_border>#riiplShowDate("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date") 
+													#riiplShowTime("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].time")</TD>
+													##highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].date" $item $vr $years $errorColor)
+													##highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].time" $item $errorColor)
 												<TD $style_cell_border>
 													#if($qcSessionIndex == $numOfQCSessions)
 														#riiplSimpleSelectBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].quality" $item $status $vr)
@@ -301,9 +431,12 @@ $page.setVlinkColor($ui.vlink)
 										</TR>
 										#foreach($tisDataIndex in [0..0])
 											<TR>
-												#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "932" "455" $errorColor $style_cell_border)
-												#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "691" "365" $errorColor $style_cell_border)
-												#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "371" "140" $errorColor $style_cell_border)
+												<TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].gm")</TD>
+												<TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].wm")</TD>
+												<TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].csf")</TD>
+												##highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "932" "455" $errorColor $style_cell_border)
+												##highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "691" "365" $errorColor $style_cell_border)
+												##highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "371" "140" $errorColor $style_cell_border)
 												#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].riipl_SegCat12Data_qcSession_tisData_tissue_id" $item "")
 											</TR>
 										#end
@@ -317,8 +450,10 @@ $page.setVlinkColor($ui.vlink)
 										<TR>
 											<TD $style_cell_border colspan="2">Tissue File Timestamp</TD>
 											<TD $style_cell_border colspan="14">
-												#highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".tisData[0].filedate" $item $vr $years $errorColor)
-												#highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".tisData[0].filetime" $item $errorColor)
+												#riiplShowDate("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].filedate") 
+												#riiplShowTime("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].filetime")
+												##highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".tisData[0].filedate" $item $vr $years $errorColor)
+												##highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".tisData[0].filetime" $item $errorColor)
 											</TD>
 										</TR>
 										<TR>
