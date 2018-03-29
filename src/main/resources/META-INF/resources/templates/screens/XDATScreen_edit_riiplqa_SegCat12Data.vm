@@ -2,27 +2,69 @@
 $page.setTitle("XDAT")
 $page.setLinkColor($ui.alink)
 $page.setVlinkColor($ui.vlink)
+
 #set($months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
 #set($days = [ 1..31 ])
 #set($years = [ $!turbineUtils.getYear()..1900])
-#if ($data.message)
-<font color="red" size="3">$data.message</font>
+#set($ratings = ["Excellent" , "Acceptable" , "Questionable" , "Unusable" , "Missing" , "Not Read" ])
+#set($fullname = "$user.Firstname $user.Lastname")
+#set ($project = $!item.getProperty("riiplqa:SegCat12Data/project"))
+#set ($subject = $!item.getProperty("riiplqa:SegCat12Data/subject"))
+#set ($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
+
+#macro (riiplShowDate $name $item $vr $years)
+	$turbineUtils.formatDate($item.getProperty($name),'EEE MMM dd, yyyy')
+	<input id="$name" type="hidden" name="$name" value="$turbineUtils.formatDate($item.getProperty($name),'yyyy-MM-dd')" />
 #end
-<p>
+
+#macro (riiplSimpleSelectBoxLbl $lbl $name $item $possibleValues $vr)
+	#if ($vr)
+		#if($vr.getField($name))
+			<span style="color:red;">&#8658</span>
+		#end
+	#end
+	
+	#if($item.isPKField($name)&& (!$vr.getField($name)))
+		<input ID="$name" type="hidden" name="$name" value="$item.getProperty($name)"/>
+		$item.getProperty($name)
+	#else
+		#if ($possibleValues.size()==0)
+			<input ID="$name" type="text" name="$name" value="$item.getProperty($name)"/>
+		#else
+			<SELECT ID="$name" name="$name">
+			<OPTION VALUE="">$!lbl</OPTION>
+			#foreach ($pValue in $possibleValues)
+				<OPTION VALUE="$pValue" #if($pValue.equals($item.getProperty($name))) SELECTED #end>$pValue</OPTION>
+			#end
+			</SELECT>
+		#end
+	#end
+#end
+
+#macro (riiplSimpleSelectBox $name $item $possibleValues $vr)
+	#riiplSimpleSelectBoxLbl("(SELECT)" $name $item $possibleValues $vr)
+#end
+
+#if ($data.message)
+	<font color="red" size="3">$data.message</font>
+#end
+
+<script type="text/javascript" LANGUAGE="JavaScript" src="$content.getURI('scripts/omUtils.js')"> </script>
 <form ID="form1" name="form1" method="post" action="$link.setAction("ModifyImageAssessorData")">
 <input type="hidden" name="project" value="$!{project}" >
+
 #if($vr)
 	<font color="red">Invalid parameters:<BR>$vr.toHTML()</font>
-<HR>
+	<HR>
 #end
 
 <TABLE width="100%">
 	<TR>
 		<TD>
-			<table width="100%">
+			<TABLE width="100%">
 				<TR>
 					<TD align="left" valign="middle">
-						<DIV class="edit_title">SegCat12 Details</DIV>
+						<DIV class="edit_title">SegCAT12 Details</DIV>
 					</TD>
 				</TR>
 			</TABLE>
@@ -31,13 +73,15 @@ $page.setVlinkColor($ui.vlink)
 	<TR>
 		<TD>
 			<TABLE width="100%">
-				<TR>
 					<TD valign="top">
 						<TABLE>
-							<TR><TD colspan='2'>
-								<hr>
-								#parse("/screens/xnat_edit_experimentData.vm")
-								<HR></TD></TR>
+							<TR>
+								<TD colspan='2'>
+									<hr>
+									#parse("/screens/xnat_edit_experimentData.vm")
+									<HR>
+								</TD>
+							</TR>
 							<tr>
 								<th align="left">SegCat12 ID</th>
 								<TD align="left">#xdatStringBox("riiplqa:SegCat12Data.ID" $item "" $vr)</TD>
@@ -45,431 +89,333 @@ $page.setVlinkColor($ui.vlink)
 							<tr>
 								<TD colspan="2">#parse("/screens/EditProjectSpecificFields.vm")</TD>
 							</tr>
-							<TR><TD>imageSession_ID</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/imageSession_ID" $item "" $vr)</TD></TR>
-							<TR><TD>date</TD><TD>#xdatDateBox("riiplqa:SegCat12Data/date" $item $vr $years)</TD></TR>
-							<TR><TD>time</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/time" $item "" $vr)</TD></TR>
-							<TR><TD>duration</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/duration" $item "" $vr)</TD></TR>
-							<TR><TD>delay</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/delay" $item "" $vr)</TD></TR>
-							<TR><TD>delay/ref_expt_id</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/delay/ref_expt_id" $item "" $vr)</TD></TR>
-							<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/note" $item "" $vr)</TD></TR>
-							<TR><TD>acquisition_site</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/acquisition_site" $item "" $vr)</TD></TR>
-							<TR><TD>visit_id</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/visit_id" $item "" $vr)</TD></TR>
-							<TR><TD>visit</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/visit" $item "" $vr)</TD></TR>
-							<TR><TD>version</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/version" $item "" $vr)</TD></TR>
-							<TR><TD>original</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/original" $item "" $vr)</TD></TR>
-							<TR><TD>protocol</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/protocol" $item "" $vr)</TD></TR>
-							<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/label" $item "" $vr)</TD></TR>
-							<TR><TD>subject</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/subject" $item "" $vr)</TD></TR>
+							<TR><TD>imageSession_ID</TD><TD>#riiplShowString("riiplqa:SegCat12Data.imageSession_ID" $item "" $vr)</TD></TR>
+							<TR><TD>date</TD><TD>#riiplShowDate("riiplqa:SegCat12Data.date" $item $vr $years)</TD></TR>
+							<TR><TD>time</TD><TD>#riiplShowString("riiplqa:SegCat12Data.time" $item "" $vr)</TD></TR>
+							<TR><TD>label</TD><TD>#riiplShowString("riiplqa:SegCat12Data.label" $item "" $vr)</TD></TR>
+							<TR><TD>subject</TD><TD>#riiplShowString("riiplqa:SegCat12Data.subject" $item "" $vr)</TD></TR>
 						</TABLE>
 					</TD>
 				</TR>
 			</TABLE>
 		</TD>
 	</TR>
+	#set ($numOfQCSessions = $item.getChildItems("riiplqa:SegCat12Data.qcSession").size() - 1)
+	#foreach($qcSessionIndex in [0..$numOfQCSessions])
+		#set($numOfImageData = -1)
+		#set($tmp = $item.getChildItems("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData.file").size() - 1)
+		#foreach($tmpLoop in [ 0.. $tmp])
+			#if($!item.getProperty("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$tmpLoop].file"))
+				#set($numOfImageData = $numOfImageData + 1)
+			#end
+		#end
+
+<!-- BEGIN riiplqa:SegSegCat12Data -->
 	<TR>
 		<TD>
-<!-- BEGIN riiplqa:SegCat12Data -->
 			<TABLE>
-				<TR><TH align="left"><font face="$ui.sansSerifFonts" size="2">Related Items</font></TH></TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#foreach($xnat_abstractResource_1_COUNTER in [0..5])
-<!-- BEGIN riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER] -->
-								<TABLE>
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/note" $item "" $vr)</TD></TR>
-												<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/label" $item "" $vr)</TD></TR>
-												<TR><TD>file_count</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/file_count" $item "" $vr)</TD></TR>
-												<TR><TD>file_size</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/file_size" $item "" $vr)</TD></TR>
-																		#xdatHiddenBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/xnat_abstractResource_id" $item "")
-											</TABLE>
-										</TD>
-									</TR>
-<!-- BEGIN riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag -->
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR>
-													<TD>tag</TD>
-													<TD>name</TD>
-												</TR>
-												#foreach($xnat_abstractResource_tag_2_COUNTER in [0..5])
-													<TR>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/tag" $item "" $vr)</TD>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/name" $item "" $vr)</TD>
-														#xdatHiddenBox("riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/xnat_abstractResource_tag_id" $item "")
-													</TR>
-												#end
-											</TABLE>
-										</TD>
-									</TR>
-<!-- END riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag -->
-								</TABLE>
-<!-- END riiplqa:SegCat12Data/in/file[$xnat_abstractResource_1_COUNTER] -->
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#foreach($xnat_abstractResource_2_COUNTER in [0..5])
-<!-- BEGIN riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER] -->
-								<TABLE>
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/note" $item "" $vr)</TD></TR>
-												<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/label" $item "" $vr)</TD></TR>
-												<TR><TD>file_count</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/file_count" $item "" $vr)</TD></TR>
-												<TR><TD>file_size</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/file_size" $item "" $vr)</TD></TR>
-																		#xdatHiddenBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/xnat_abstractResource_id" $item "")
-											</TABLE>
-										</TD>
-									</TR>
-<!-- BEGIN riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag -->
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR>
-													<TD>tag</TD>
-													<TD>name</TD>
-												</TR>
-												#foreach($xnat_abstractResource_tag_3_COUNTER in [0..5])
-													<TR>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag[$xnat_abstractResource_tag_3_COUNTER]/tag" $item "" $vr)</TD>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag[$xnat_abstractResource_tag_3_COUNTER]/name" $item "" $vr)</TD>
-														#xdatHiddenBox("riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag[$xnat_abstractResource_tag_3_COUNTER]/xnat_abstractResource_tag_id" $item "")
-													</TR>
-												#end
-											</TABLE>
-										</TD>
-									</TR>
-<!-- END riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER]/tags/tag -->
-								</TABLE>
-<!-- END riiplqa:SegCat12Data/out/file[$xnat_abstractResource_2_COUNTER] -->
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-<!-- BEGIN riiplqa:SegCat12Data/parameters/addParam -->
-				<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/parameters/addParam</font></TH></TR>
 				<TR>
 					<TD align="left" valign="top">
 						<TABLE>
 							<TR>
-								<TD>addField</TD>
-								<TD>name</TD>
+								<TD>
+									<HR>
+									<HR>
+								</TD>
 							</TR>
-							#foreach($xnat_addField_3_COUNTER in [0..5])
-								<TR>
-									<TD>#xdatTextBox("riiplqa:SegCat12Data/parameters/addParam[$xnat_addField_3_COUNTER]/addField" $item "" $vr)</TD>
-									<TD>#xdatTextBox("riiplqa:SegCat12Data/parameters/addParam[$xnat_addField_3_COUNTER]/name" $item "" $vr)</TD>
-									#xdatHiddenBox("riiplqa:SegCat12Data/parameters/addParam[$xnat_addField_3_COUNTER]/xnat_addField_id" $item "")
-								</TR>
-							#end
-						</TABLE>
-					</TD>
-				</TR>
-<!-- END riiplqa:SegCat12Data/parameters/addParam -->
-				<TR>
-					<TD align="left" valign="top">
-<!-- BEGIN riiplqa:SegCat12Data/provenance -->
-						<TABLE>
-							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/provenance</font></TH></TR>
+<!-- BEGIN riiplqa:SegCat12Data.qcSession[$qcSessionIndex] -->
+
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===--- STATIC IMAGE  ---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+
+
+						#if ($item.getProperty("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/qcImage").length() > 0)
+							#set($qcImageHeight = $numOfImageData * 100)
 							<TR>
-								<TD align="left" valign="top">
+								<TD>
 									<TABLE>
-																#xdatHiddenBox("riiplqa:SegCat12Data/provenance/prov_process_id" $item "")
+										<TR>
+											<TD>
+											<div style="width:600px;overflow:scroll">
+													<a href="$content.getURI("/data/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/qcImage")">
+														<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/qcImage")">
+													</a>
+													#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].qcImage" $item "")
+													#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/riiplqa_SegCat12Data_qcSession_id" $item "")
+												</div>
+											</TD>
+										</TR>
 									</TABLE>
 								</TD>
 							</TR>
+<!-- END riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData -->
+									#else
+
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===--- XTK ADDITION  ---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+
 							<TR>
-								<TD align="left" valign="top">
-									<TABLE><TR><TD>
-										#foreach($prov_processStep_4_COUNTER in [0..5])
-<!-- BEGIN riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER] -->
-											<TABLE>
-												<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]</font></TH></TR>
-												<TR>
-													<TD align="left" valign="top">
-														<TABLE>
-															<TR><TD>program</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/program" $item "" $vr)</TD></TR>
-															<TR><TD>program/version</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/program/version" $item "" $vr)</TD></TR>
-															<TR><TD>program/arguments</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/program/arguments" $item "" $vr)</TD></TR>
-															<TR><TD>timestamp</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/timestamp" $item "" $vr)</TD></TR>
-															<TR><TD>cvs</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/cvs" $item "" $vr)</TD></TR>
-															<TR><TD>user</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/user" $item "" $vr)</TD></TR>
-															<TR><TD>machine</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/machine" $item "" $vr)</TD></TR>
-															<TR><TD>platform</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/platform" $item "" $vr)</TD></TR>
-															<TR><TD>platform/version</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/platform/version" $item "" $vr)</TD></TR>
-															<TR><TD>compiler</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/compiler" $item "" $vr)</TD></TR>
-															<TR><TD>compiler/version</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/compiler/version" $item "" $vr)</TD></TR>
-																					#xdatHiddenBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/prov_processStep_id" $item "")
-														</TABLE>
-													</TD>
-												</TR>
-<!-- BEGIN riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/library -->
-												<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/library</font></TH></TR>
-												<TR>
-													<TD align="left" valign="top">
-														<TABLE>
-															<TR>
-																<TD>library</TD>
-																<TD>version</TD>
-															</TR>
-															#foreach($prov_processStep_library_5_COUNTER in [0..5])
-																<TR>
-																	<TD>#xdatTextBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/library[$prov_processStep_library_5_COUNTER]/library" $item "" $vr)</TD>
-																	<TD>#xdatTextBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/library[$prov_processStep_library_5_COUNTER]/version" $item "" $vr)</TD>
-																	#xdatHiddenBox("riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/library[$prov_processStep_library_5_COUNTER]/prov_processStep_library_id" $item "")
-																</TR>
-															#end
-														</TABLE>
-													</TD>
-												</TR>
-<!-- END riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER]/library -->
-											</TABLE>
-<!-- END riiplqa:SegCat12Data/provenance/processStep[$prov_processStep_4_COUNTER] -->
-										#end
-									</TD></TR></TABLE>
-								</TD>
-							</TR>
-						</TABLE>
-<!-- END riiplqa:SegCat12Data/provenance -->
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-<!-- BEGIN riiplqa:SegCat12Data/investigator -->
-						<TABLE>
-							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/investigator</font></TH></TR>
-							<TR>
-								<TD align="left" valign="top">
-									<TABLE>
-										<TR><TD>title</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/title" $item "" $vr)</TD></TR>
-										<TR><TD>firstname</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/firstname" $item "" $vr)</TD></TR>
-										<TR><TD>lastname</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/lastname" $item "" $vr)</TD></TR>
-										<TR><TD>institution</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/institution" $item "" $vr)</TD></TR>
-										<TR><TD>department</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/department" $item "" $vr)</TD></TR>
-										<TR><TD>email</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/email" $item "" $vr)</TD></TR>
-										<TR><TD>phone</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/phone" $item "" $vr)</TD></TR>
-										<TR><TD>ID</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/investigator/ID" $item "" $vr)</TD></TR>
-																#xdatHiddenBox("riiplqa:SegCat12Data/investigator/xnat_investigatorData_id" $item "")
-									</TABLE>
-								</TD>
-							</TR>
-						</TABLE>
-<!-- END riiplqa:SegCat12Data/investigator -->
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-<!-- BEGIN riiplqa:SegCat12Data/validation -->
-						<TABLE>
-							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/validation</font></TH></TR>
-							<TR>
-								<TD align="left" valign="top">
-									<TABLE>
-										<TR><TD>method</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/validation/method" $item "" $vr)</TD></TR>
-										<TR><TD>date</TD><TD>#xdatDateBox("riiplqa:SegCat12Data/validation/date" $item $vr $years)</TD></TR>
-										<TR><TD>notes</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/validation/notes" $item "" $vr)</TD></TR>
-										<TR><TD>validated_by</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/validation/validated_by" $item "" $vr)</TD></TR>
-										<TR><TD>status</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/validation/status" $item "" $vr)</TD></TR>
-																#xdatHiddenBox("riiplqa:SegCat12Data/validation/xnat_validationData_id" $item "")
-									</TABLE>
-								</TD>
-							</TR>
-						</TABLE>
-<!-- END riiplqa:SegCat12Data/validation -->
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#foreach($xnat_abstractResource_7_COUNTER in [0..5])
-<!-- BEGIN riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER] -->
-								<TABLE>
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR><TD>note</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/note" $item "" $vr)</TD></TR>
-												<TR><TD>label</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/label" $item "" $vr)</TD></TR>
-												<TR><TD>file_count</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/file_count" $item "" $vr)</TD></TR>
-												<TR><TD>file_size</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/file_size" $item "" $vr)</TD></TR>
-																		#xdatHiddenBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/xnat_abstractResource_id" $item "")
-											</TABLE>
-										</TD>
-									</TR>
-<!-- BEGIN riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag -->
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR>
-													<TD>tag</TD>
-													<TD>name</TD>
-												</TR>
-												#foreach($xnat_abstractResource_tag_8_COUNTER in [0..5])
-													<TR>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag[$xnat_abstractResource_tag_8_COUNTER]/tag" $item "" $vr)</TD>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag[$xnat_abstractResource_tag_8_COUNTER]/name" $item "" $vr)</TD>
-														#xdatHiddenBox("riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag[$xnat_abstractResource_tag_8_COUNTER]/xnat_abstractResource_tag_id" $item "")
-													</TR>
+								<TD>
+									#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].qcImage" $item "")
+									#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$qcSessionIndex]/riipl_SegCat12Data_qcSession_id" $item "")
+									<TABLE $style_table_collapse>
+										<TR>
+											#set ($mainSlice = "")
+											#foreach($imgDataIndex in [0..$numOfImageData])
+												#set ($fn = $item.getProperty("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file"))
+												#set ($li = $fn.lastIndexOf("/") + 1 )
+												#set ($fn = $fn.substring($li))
+												#set ($niiDate = $turbineUtils.formatDate($item.getProperty("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date"),'yyyyMMdd'))
+												#set ($niiTime = $item.getProperty("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].time").replace(':',''))
+												#if ($niiTime == "000000")
+													##fallback, hopefully one will work
+													#set ($niiTime = $turbineUtils.formatDate($item.getProperty("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date"),'HHmmss'))
 												#end
-											</TABLE>
-										</TD>
-									</TR>
-<!-- END riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER]/tags/tag -->
-								</TABLE>
-<!-- END riiplqa:SegCat12Data/resources/resource[$xnat_abstractResource_7_COUNTER] -->
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-<!-- BEGIN riiplqa:SegCat12Data/fields/field -->
-				<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/fields/field</font></TH></TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE>
-							<TR>
-								<TD>field</TD>
-								<TD>name</TD>
-							</TR>
-							#foreach($xnat_experimentData_field_8_COUNTER in [0..5])
-								<TR>
-									<TD>#xdatTextBox("riiplqa:SegCat12Data/fields/field[$xnat_experimentData_field_8_COUNTER]/field" $item "" $vr)</TD>
-									<TD>#xdatTextBox("riiplqa:SegCat12Data/fields/field[$xnat_experimentData_field_8_COUNTER]/name" $item "" $vr)</TD>
-									#xdatHiddenBox("riiplqa:SegCat12Data/fields/field[$xnat_experimentData_field_8_COUNTER]/xnat_experimentData_field_id" $item "")
-								</TR>
-							#end
-						</TABLE>
-					</TD>
-				</TR>
-<!-- END riiplqa:SegCat12Data/fields/field -->
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#foreach($riiplqa_SegCat12Data_qcSession_8_COUNTER in [0..5])
-<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER] -->
-								<TABLE>
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR><TD>qcImage</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/qcImage" $item "" $vr)</TD></TR>
-												<TR><TD>quality</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/quality" $item "" $vr)</TD></TR>
-												<TR><TD>username</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/username" $item "" $vr)</TD></TR>
-												<TR><TD>date</TD><TD>#xdatDateBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/date" $item $vr $years)</TD></TR>
-												<TR><TD>time</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/time" $item "" $vr)</TD></TR>
-												<TR><TD>comments</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/comments" $item "" $vr)</TD></TR>
-																		#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/riiplqa_SegCat12Data_qcSession_id" $item "")
-											</TABLE>
-										</TD>
-									</TR>
-<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData -->
-									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData</font></TH></TR>
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE>
-												<TR>
-													<TD>file</TD>
-													<TD>date</TD>
-													<TD>time</TD>
-													<TD>quality</TD>
-												</TR>
-												#foreach($riiplqa_SegCat12Data_qcSession_imgData_9_COUNTER in [0..5])
-													<TR>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData[$riiplqa_SegCat12Data_qcSession_imgData_9_COUNTER]/file" $item "" $vr)</TD>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData[$riiplqa_SegCat12Data_qcSession_imgData_9_COUNTER]/date" $item "" $vr)</TD>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData[$riiplqa_SegCat12Data_qcSession_imgData_9_COUNTER]/time" $item "" $vr)</TD>
-														<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData[$riiplqa_SegCat12Data_qcSession_imgData_9_COUNTER]/quality" $item "" $vr)</TD>
-														#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData[$riiplqa_SegCat12Data_qcSession_imgData_9_COUNTER]/riiplqa_SegCat12Data_qcSession_imgData_id" $item "")
-													</TR>
+												#if ($niiTime.length() == 0)
+													##fallback, hopefully one will work
+													#set ($niiTime = $turbineUtils.formatDate($item.getProperty("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date"),'HHmmss'))
 												#end
-											</TABLE>
-										</TD>
-									</TR>
-<!-- END riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/imgData -->
-									<TR>
-										<TD align="left" valign="top">
-											<TABLE><TR><TD>
-												#foreach($riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER in [0..5])
-<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER] -->
-													<TABLE>
-														<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]</font></TH></TR>
-														<TR>
-															<TD align="left" valign="top">
-																<TABLE>
-																	<TR><TD>file</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/file" $item "" $vr)</TD></TR>
-																	<TR><TD>filedate</TD><TD>#xdatDateBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/filedate" $item $vr $years)</TD></TR>
-																	<TR><TD>filetime</TD><TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/filetime" $item "" $vr)</TD></TR>
-																	<TR><TD>quality</TD><TD>#xdatStringBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/quality" $item "" $vr)</TD></TR>
-																							#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/riiplqa_SegCat12Data_qcSession_tisData_id" $item "")
-																</TABLE>
-															</TD>
-														</TR>
-<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue -->
-														<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue</font></TH></TR>
-														<TR>
-															<TD align="left" valign="top">
-																<TABLE>
-																	<TR>
-																		<TD>gm</TD>
-																		<TD>wm</TD>
-																		<TD>csf</TD>
-																	</TR>
-																	#foreach($riiplqa_SegCat12Data_qcSession_tisData_tissue_10_COUNTER in [0..5])
-																		<TR>
-																			<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_SegCat12Data_qcSession_tisData_tissue_10_COUNTER]/gm" $item "" $vr)</TD>
-																			<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_SegCat12Data_qcSession_tisData_tissue_10_COUNTER]/wm" $item "" $vr)</TD>
-																			<TD>#xdatTextBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_SegCat12Data_qcSession_tisData_tissue_10_COUNTER]/csf" $item "" $vr)</TD>
-																			#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue[$riiplqa_SegCat12Data_qcSession_tisData_tissue_10_COUNTER]/riiplqa_SegCat12Data_qcSession_tisData_tissue_id" $item "")
-																		</TR>
+												#set ($idBase = "nii_${qcSessionIndex}_${imgDataIndex}")
+													<TD $style_cell_border>
+													 <div id="$idBase" style="background-color: #000; width: 175px; height: 175px;" />
+														<script type="text/javascript">
+															var slice_${idBase} = null;
+															var volume_${idBase} = null;
+															addLoadEvent(function () {
+																#set ($urlFile = $content.getURI("/REST/projects/").concat("$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/${niiDate}_${niiTime}/$fn") )
+																#newVolumeAnd2DSlice( "volume_${idBase}" "slice_${idBase}" $urlFile $idBase)
+													
+																#if ($mainSlice == "")
+																	#set ($mainSlice = "slice_${idBase}")
+																#else
+																	slice_${idBase}.camera.view=${mainSlice}.camera.view;
+																#end
+													
+																slice_${idBase}.interactor.onMouseWheel = function(right) { syncTo$idBase(); };
+																
+															});
+															function syncTo$idBase() {
+																#foreach($indx in [0..$numOfImageData])
+																	#if ($indx != $imgDataIndex)
+																		volume_nii_${qcSessionIndex}_${indx}.indexX=volume_${idBase}.indexX;
+																		volume_nii_${qcSessionIndex}_${indx}.indexY=volume_${idBase}.indexY;
+																		volume_nii_${qcSessionIndex}_${indx}.indexZ=volume_${idBase}.indexZ;
+																		volume_nii_${qcSessionIndex}_${indx}.modified();
 																	#end
-																</TABLE>
-															</TD>
-														</TR>
-<!-- END riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER]/tissue -->
-													</TABLE>
-<!-- END riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER]/tisData[$riiplqa_SegCat12Data_qcSession_tisData_9_COUNTER] -->
+																#end
+															}
+													</script>
+												</TD>
+											#end
+										</TR>
+									</TABLE>
+									<script type="text/javascript">
+										function setSagittal_${qcSessionIndex}() {
+											var orient='SAGITTAL';
+											#foreach($indx in [0..$numOfImageData])
+												slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
+												volume_nii_${qcSessionIndex}_${indx}.modified();
+												slice_nii_${qcSessionIndex}_${indx}.render();
+											#end
+											return false;
+										}
+										function setCoronal_${qcSessionIndex}() {
+											var orient='CORONAL';
+											#foreach($indx in [0..$numOfImageData])
+												slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
+												volume_nii_${qcSessionIndex}_${indx}.modified();
+												slice_nii_${qcSessionIndex}_${indx}.render();
+											#end
+											return false;
+										}
+										function setAxial_${qcSessionIndex}() {
+											var orient='AXIAL';
+											#foreach($indx in [0..$numOfImageData])
+												slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
+												volume_nii_${qcSessionIndex}_${indx}.modified();
+												slice_nii_${qcSessionIndex}_${indx}.render();
+											#end
+											return false;
+										}
+									</script>
+									<input type="button" onClick="setSagittal_${qcSessionIndex}()" value="Set Sagittal" >
+									<input type="button" onClick="setCoronal_${qcSessionIndex}()" value="Set Coronal">
+									<input type="button" onClick="setAxial_${qcSessionIndex}()" value="Set Axial">
+								</TD>
+							</TR>
+
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===--- XTK ADDITION END ===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+
+									#end
+
+							<TR>
+								<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Image Quality (Images above are in the order of images below)</font></TH>
+							</TR>
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE $style_table_collapse>
+										<TR>
+											<TD $style_cell_border>file</TD>
+											<TD $style_cell_border>timestamp</TD>
+											<TD $style_cell_border>quality</TD>
+										</TR>
+										#foreach($imgDataIndex in [0..$numOfImageData])
+											<TR>
+												<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file" $item "" $vr)</TD>
+												<TD $style_cell_border>
+													#highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].date" $item $vr $years $errorColor)
+													#highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].time" $item $errorColor)
+													</TD>
+												<TD $style_cell_border>
+													#if($qcSessionIndex == $numOfQCSessions)
+														#riiplSimpleSelectBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].quality" $item $status $vr)
+													#else
+														#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].quality" $item $status $vr)
+													#end
+												</TD>
+												#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].imgData[$imgDataIndex].riipl_SegCat12Data_qcSession_imgData_id" $item "")
+											</TR>
+										#end
+									</TABLE>
+								</TD>
+							</TR>
+
+<!--								<TABLE>-->
+<!-- BEGIN riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData.tissue -->
+							<TR>
+								<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Tissue Report:</font></TH>
+							</TR>
+							<TR>
+								<TD align="left" valign="top">
+									## THERE SHOULD ONLY BE ONE TISSUEDATA
+									#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].riipl_SegCat12Data_qcSession_tisData_id" $item "")
+									<TABLE $style_table_collapse>
+										<TR>
+											<TD $style_cell_border>Gray Matter Volume</TD>
+											<TD $style_cell_border>White Matter Volume</TD>
+											<TD $style_cell_border>CSF Matter Volume</TD>
+										</TR>
+										#foreach($tisDataIndex in [0..0])
+											<TR>
+												#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "932" "455" $errorColor $style_cell_border)
+												#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "691" "365" $errorColor $style_cell_border)
+												#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "371" "140" $errorColor $style_cell_border)
+												#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].riipl_SegCat12Data_qcSession_tisData_tissue_id" $item "")
+											</TR>
+										#end
+										<TR>
+											<TD colspan="16"><hr></TD>
+										</TR>
+										<TR>
+											<TD $style_cell_border colspan="2">Tissue CSV File</TD>
+											<TD $style_cell_border colspan="14">#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].file" $item "" $vr)</TD>
+										</TR>
+										<TR>
+											<TD $style_cell_border colspan="2">Tissue File Timestamp</TD>
+											<TD $style_cell_border colspan="14">
+												#highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".tisData[0].filedate" $item $vr $years $errorColor)
+												#highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $qcSessionIndex ".tisData[0].filetime" $item $errorColor)
+											</TD>
+										</TR>
+										<TR>
+											<TD $style_cell_border colspan="2">Quality</TD>
+											<TD $style_cell_border colspan="14">
+												#if($qcSessionIndex == $numOfQCSessions)
+													#riiplSimpleSelectBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].quality" $item $status $vr)
+												#else
+													#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].quality" $item $status $vr)
 												#end
-											</TD></TR></TABLE>
-										</TD>
-									</TR>
-								</TABLE>
-<!-- END riiplqa:SegCat12Data/qcSession[$riiplqa_SegCat12Data_qcSession_8_COUNTER] -->
-							#end
-						</TD></TR></TABLE>
+												#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].parameter" $item "")
+											</TD>
+										</TR>
+									</TABLE>
+								</TD>
+							</TR>
+<!-- END riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData.tissue -->
+							<TR>
+								<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Sign-Off Information</font></TH>
+							</TR>
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE>
+										<TR><TD>Assesor</TD><TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].username" $item "" $vr)</TD></TR>
+										<TR>
+											<TD>Assesment Date</TD>
+											<TD>
+												#riiplShowDate("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].date" $item $vr $years)
+												#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].time" $item "" $vr)
+											</TD>
+										</TR>
+										#if($qcSessionIndex == $numOfQCSessions)
+											<TR><TD>Final Quality</TD><TD>#riiplSimpleSelectBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].quality" $item $finalStatus $vr)</TD></TR>
+											<TR>
+												<TD>Comments</TD>
+												<TD>
+													<!--a little long so as to have the riipl_SegCat12Data_qcSession_id here -->
+													#xdatStringBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].comments" $item "" $vr)
+													#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].riipl_SegCat12Data_qcSession_id" $item "")
+												</TD>
+											</TR>
+										#else
+											<TR><TD>Final Quality</TD><TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].quality" $item $finalStatus $vr)</TD></TR>
+											<TR>
+												<TD>Comments</TD>
+												<TD>
+													<!--a little long so as to have the riipl_SegCat12Data_qcSession_id here -->
+													#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].comments" $item "" $vr)
+													#xdatHiddenBox("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].riipl_SegCat12Data_qcSession_id" $item "")
+												</TD>
+											</TR>
+										#end
+									</TABLE>
+								</TD>
+							</TR>
+
+						</TABLE>
+<!-- END riiplqa:SegCat12Data.qcSession[$qcSessionIndex] -->
 					</TD>
 				</TR>
 			</TABLE>
-<!-- END riiplqa:SegCat12Data -->
 		</TD>
 	</TR>
+<!-- END riiplqa:SegSegCat12Data -->
+	#end
 	<TR>
 		<TD>
-		#xdatEditProps($item $edit_screen)
-		<TR><TD COLSPAN=2 ALIGN=left><input type="button" ONCLICK="validateForm();"  name="eventSubmit_doInsert" value="Submit"/></TD></TR>
+			#xdatEditProps($item $edit_screen)
+			<TR>
+				<TD COLSPAN=2 ALIGN=left>
+					<input type="button" ONCLICK="validateForm();"  name="eventSubmit_doInsert" value="Submit"/>
+				</TD>
+			</TR>
 		</TD>
 	</TR>
 </TABLE>
+
+</p>
 </form>
 
 <script type="text/javascript">
 function validateForm()
 {
-   //INSERT CUSTOM CONTENT HERE
-
-   validateExperimentForm();
-   return false;
+	//INSERT CUSTOM CONTENT HERE
+	try
+	{
+		validateExperimentForm();
+	}
+	catch (err)
+	{
+		try {alert("error name: " + err.name); } catch (err2) {}
+		try {alert("error message: " + err.message); } catch (err2) {}
+		try {alert("error file: " + err.fileName); } catch (err2) {}
+		try {alert("error lineNumber: " + err.lineNumber); } catch (err2) {}
+		try {alert("error extMessage: " + err.extMessage); } catch (err2) {}
+	}
+	return false;
 }
 </script>
+

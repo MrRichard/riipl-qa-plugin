@@ -2,512 +2,383 @@
 $page.setTitle("SegVbm8 Details")
 $page.setLinkColor($ui.alink)
 $page.setVlinkColor($ui.vlink)
-#if ($turbineUtils.GetPassedParameter("popup", $data))
-	#set ($popup = $turbineUtils.GetPassedParameter("popup", data) )
+
+#set($months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+#set($days = [ 1..31 ])
+#set($years = [ $!turbineUtils.getYear()..1900])
+#set($ratings = ["Excellent" , "Acceptable" , "Questionable" , "Unusable" , "Missing" , "Not Read" ])
+#set($fullname = "$user.Firstname $user.Lastname")
+#set ($project = $!item.getProperty("riiplqa:SegCat12Data/project"))
+#set ($subject = $!item.getProperty("riiplqa:SegCat12Data/subject"))
+#set ($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
+
+#macro (riiplShowDate $name $item $vr $years)
+	$turbineUtils.formatDate($item.getProperty($name),'EEE MMM dd, yyyy')
+	<input id="$name" type="hidden" name="$name" value="$turbineUtils.formatDate($item.getProperty($name),'yyyy-MM-dd')" />
+#end
+
+#if ($data.getParameters().getString("popup"))
+	#set ($popup = $data.getParameters().getString("popup") )
 	#set ($popup = "false")
 #end
+
+#macro (riiplSimpleSelectBoxLbl $lbl $name $item $possibleValues $vr)
+	#if ($vr)
+		#if($vr.getField($name))
+			<span style="color:red;">&#8658</span>
+		#end
+	#end
+	
+	#if($item.isPKField($name)&& (!$vr.getField($name)))
+		<input ID="$name" type="hidden" name="$name" value="$item.getProperty($name)"/>
+		$item.getProperty($name)
+	#else
+		#if ($possibleValues.size()==0)
+			<input ID="$name" type="text" name="$name" value="$item.getProperty($name)"/>
+		#else
+			<SELECT ID="$name" name="$name">
+			<OPTION VALUE="">$!lbl</OPTION>
+			#foreach ($pValue in $possibleValues)
+				<OPTION VALUE="$pValue" #if($pValue.equals($item.getProperty($name))) SELECTED #end>$pValue</OPTION>
+			#end
+			</SELECT>
+		#end
+	#end
+#end
+
+#set( $errorColor = "#FF9999" )
+
+#macro (riiplSimpleSelectBox $name $item $possibleValues $vr)
+	#riiplSimpleSelectBoxLbl("(SELECT)" $name $item $possibleValues $vr)
+#end
+
+#if ($data.message)
+	<font color="red" size="3">$data.message</font>
+#end
+
+#set( $style_table_collapse = 'style="border-collapse:collapse;"')
+#set( $style_cell_border = 'style="border: 1px solid #ccc;"')
+
+#if($vr)
+	<font color="red">Invalid parameters:<BR>$vr.toHTML()</font>
+<HR>
+#end
+
 <TABLE width="100%">
 	<TR>
 		<TD>
 			<table width="100%">
 				<TR>
 					<TD align="left" valign="middle">
-						<font face="$ui.sansSerifFonts" size="3"><b>SegVbm8 Details</b></font>
+						<font face="$ui.sansSerifFonts" size="3"><b>SegCat12 Details</b></font>
 					</TD>
 				</TR>
 			</TABLE>
 		</TD>
 	</TR>
+	<TR>
+		<TD>
+			ID: $!item.getProperty("riiplqa:SegCat12Data/ID")<br/>
+			label: $!item.getProperty("riiplqa:SegCat12Data/label")<br/>
+		</TD>
+	</TR>
+
 	<TR>
 		<TD>
 			<TABLE width="100%">
 				<TR>
 					<TD valign="top">
 						<TABLE>
-							<TR><TD>imageSession_ID</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/imageSession_ID")</TD></TR>
-							<TR><TD>date</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/date")</TD></TR>
-							<TR><TD>time</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/time")</TD></TR>
-							<TR><TD>duration</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/duration")</TD></TR>
-							<TR><TD>delay</TD><TD>$!item.getIntegerProperty("riiplqa:SegVbm8Data/delay")</TD></TR>
-							<TR><TD>delay/ref_expt_id</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/delay/ref_expt_id")</TD></TR>
-							<TR><TD>note</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/note")</TD></TR>
-							<TR><TD>acquisition_site</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/acquisition_site")</TD></TR>
-							<TR><TD>ID</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/ID")</TD></TR>
-							<TR><TD>project</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/project")</TD></TR>
-							<TR><TD>visit_id</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/visit_id")</TD></TR>
-							<TR><TD>visit</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/visit")</TD></TR>
-							<TR><TD>version</TD><TD>$!item.getIntegerProperty("riiplqa:SegVbm8Data/version")</TD></TR>
-							<TR><TD>original</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/original")</TD></TR>
-							<TR><TD>protocol</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/protocol")</TD></TR>
-							<TR><TD>label</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/label")</TD></TR>
-							<TR><TD>subject</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/subject")</TD></TR>
+							<TR><TD colspan='2'>
+								<hr>
+								#parse("/screens/xnat_edit_experimentData.vm")
+								<HR></TD></TR>
+							<tr>
+								<th align="left">SegCat12 ID</th>
+								<TD align="left">#xdatStringBox("riiplqa:SegCat12Data.ID" $item "" $vr)</TD>
+							</tr>
+							<tr>
+								<TD colspan="2">#parse("/screens/EditProjectSpecificFields.vm")</TD>
+							</tr>
+							<TR><TD>imageSession_ID</TD><TD>#riiplShowString("riiplqa:SegCat12Data/imageSession_ID" $item "" $vr)</TD></TR>
+							<TR><TD>date</TD><TD>#riiplShowDate("riiplqa:SegCat12Data/date" $item $vr $years)</TD></TR>
+							<TR><TD>time</TD><TD>#riiplShowString("riiplqa:SegCat12Data/time" $item "" $vr)</TD></TR>
+							<TR><TD>label</TD><TD>#riiplShowString("riiplqa:SegCat12Data/label" $item "" $vr)</TD></TR>
 						</TABLE>
 					</TD>
-					<TD valign="top" align="right">
-						#parse($turbineUtils.getTemplateName("actions",$om.getXSIType(),$project))
-					</TD>
+					<TD valign="top" align="right">#elementActionsBox($element $search_field $search_value $data.getSession().getAttribute("user") $item)</TD>
 				</TR>
 			</TABLE>
 		</TD>
 	</TR>
+
+	#set ($project = $!item.getProperty("riiplqa:SegCat12Data/project"))
+	#set ($subject = $!item.getProperty("riiplqa:SegCat12Data/subject"))
+	#set ($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
+
+	#set ($numOfQCSessions = $item.getChildItems("riiplqa:SegCat12Data/qcSession").size() - 1)
+	#foreach($riipl_SegCat12Data_qcSession_8_COUNTER in [0..$numOfQCSessions])
+		#set($numOfImageData = -1)
+		#set($tmp = $item.getChildItems("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData/file").size() - 1)
+		#foreach($tmpLoop in [ 0.. $tmp])
+			#if($!item.getProperty("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData[$tmpLoop]/file"))
+				#set($numOfImageData = $numOfImageData + 1)
+			#end
+		#end
+		#set($numOfTissueData = -1)
+		#set($tmp = $item.getChildItems("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData/tissue").size() - 1)
+		#foreach($tmpLoop in [ 0.. $tmp])
+			#if($!item.getProperty("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData/tissue[$tmpLoop]/tissueType"))
+				#set($numOfTissueData = $numOfTissueData + 1)
+			#end
+		#end
+
 	<TR>
 		<TD>
-<!-- BEGIN riiplqa:SegVbm8Data -->
+<!-- BEGIN riiplqa:SegCat12Data -->
 			<TABLE>
-				<TR><TH align="left"><font face="$ui.sansSerifFonts" size="2">Related Items</font></TH></TR>
 				<TR>
 					<TD align="left" valign="top">
 						<TABLE>
-						</TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($xnat_abstractResource_1_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/in/file").size() - 1)
-							#if($xnat_abstractResource_1_NUM_ROWS>=0)
-								#foreach($xnat_abstractResource_1_COUNTER in [0..$xnat_abstractResource_1_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>note</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/note")</TD></TR>
-													<TR><TD>label</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/label")</TD></TR>
-													<TR><TD>file_count</TD><TD>$!item.getIntegerProperty("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/file_count")</TD></TR>
-													<TR><TD>file_size</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/file_size")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE><TR><TD>
-													#set($xnat_abstractResource_tag_2_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag").size() - 1)
-													#if($xnat_abstractResource_tag_2_NUM_ROWS>=0)
-														#foreach($xnat_abstractResource_tag_2_COUNTER in [0..$xnat_abstractResource_tag_2_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER] -->
-															<TABLE>
-																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]</font></TH></TR>
-																<TR>
-																	<TD align="left" valign="top">
-																		<TABLE>
-																			<TR><TD>tag</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/tag")</TD></TR>
-																			<TR><TD>name</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER]/name")</TD></TR>
-																		</TABLE>
-																	</TD>
-																</TR>
-															</TABLE>
-<!-- END riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER]/tags/tag[$xnat_abstractResource_tag_2_COUNTER] -->
-														#end
-													#end
-												</TD></TR></TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/in/file[$xnat_abstractResource_1_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($xnat_abstractResource_3_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/out/file").size() - 1)
-							#if($xnat_abstractResource_3_NUM_ROWS>=0)
-								#foreach($xnat_abstractResource_3_COUNTER in [0..$xnat_abstractResource_3_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>note</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/note")</TD></TR>
-													<TR><TD>label</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/label")</TD></TR>
-													<TR><TD>file_count</TD><TD>$!item.getIntegerProperty("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/file_count")</TD></TR>
-													<TR><TD>file_size</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/file_size")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE><TR><TD>
-													#set($xnat_abstractResource_tag_4_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag").size() - 1)
-													#if($xnat_abstractResource_tag_4_NUM_ROWS>=0)
-														#foreach($xnat_abstractResource_tag_4_COUNTER in [0..$xnat_abstractResource_tag_4_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER] -->
-															<TABLE>
-																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER]</font></TH></TR>
-																<TR>
-																	<TD align="left" valign="top">
-																		<TABLE>
-																			<TR><TD>tag</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER]/tag")</TD></TR>
-																			<TR><TD>name</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER]/name")</TD></TR>
-																		</TABLE>
-																	</TD>
-																</TR>
-															</TABLE>
-<!-- END riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER]/tags/tag[$xnat_abstractResource_tag_4_COUNTER] -->
-														#end
-													#end
-												</TD></TR></TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/out/file[$xnat_abstractResource_3_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($xnat_addField_5_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/parameters/addParam").size() - 1)
-							#if($xnat_addField_5_NUM_ROWS>=0)
-								#foreach($xnat_addField_5_COUNTER in [0..$xnat_addField_5_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/parameters/addParam[$xnat_addField_5_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/parameters/addParam[$xnat_addField_5_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>addField</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/parameters/addParam[$xnat_addField_5_COUNTER]/addField")</TD></TR>
-													<TR><TD>name</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/parameters/addParam[$xnat_addField_5_COUNTER]/name")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/parameters/addParam[$xnat_addField_5_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-<!-- BEGIN riiplqa:SegVbm8Data/provenance -->
-						<TABLE>
-							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/provenance</font></TH></TR>
 							<TR>
-								<TD align="left" valign="top">
-									<TABLE>
-									</TABLE>
+								<TD>
+									<HR><HR>
 								</TD>
 							</TR>
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===--- STATIC IMAGE  ---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+
+						#if ($item.getProperty("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/qcImage").length() > 0)
 							<TR>
-								<TD align="left" valign="top">
-									<TABLE><TR><TD>
-										#set($prov_processStep_7_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/provenance/processStep").size() - 1)
-										#if($prov_processStep_7_NUM_ROWS>=0)
-											#foreach($prov_processStep_7_COUNTER in [0..$prov_processStep_7_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER] -->
-												<TABLE>
-													<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]</font></TH></TR>
-													<TR>
-														<TD align="left" valign="top">
-															<TABLE>
-																<TR><TD>program</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/program")</TD></TR>
-																<TR><TD>program/version</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/program/version")</TD></TR>
-																<TR><TD>program/arguments</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/program/arguments")</TD></TR>
-																<TR><TD>timestamp</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/timestamp")</TD></TR>
-																<TR><TD>cvs</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/cvs")</TD></TR>
-																<TR><TD>user</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/user")</TD></TR>
-																<TR><TD>machine</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/machine")</TD></TR>
-																<TR><TD>platform</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/platform")</TD></TR>
-																<TR><TD>platform/version</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/platform/version")</TD></TR>
-																<TR><TD>compiler</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/compiler")</TD></TR>
-																<TR><TD>compiler/version</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/compiler/version")</TD></TR>
-															</TABLE>
-														</TD>
-													</TR>
-													<TR>
-														<TD align="left" valign="top">
-															<TABLE><TR><TD>
-																#set($prov_processStep_library_8_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/library").size() - 1)
-																#if($prov_processStep_library_8_NUM_ROWS>=0)
-																	#foreach($prov_processStep_library_8_COUNTER in [0..$prov_processStep_library_8_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/library[$prov_processStep_library_8_COUNTER] -->
-																		<TABLE>
-																			<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/library[$prov_processStep_library_8_COUNTER]</font></TH></TR>
-																			<TR>
-																				<TD align="left" valign="top">
-																					<TABLE>
-																						<TR><TD>library</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/library[$prov_processStep_library_8_COUNTER]/library")</TD></TR>
-																						<TR><TD>version</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/library[$prov_processStep_library_8_COUNTER]/version")</TD></TR>
-																					</TABLE>
-																				</TD>
-																			</TR>
-																		</TABLE>
-<!-- END riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER]/library[$prov_processStep_library_8_COUNTER] -->
-																	#end
-																#end
-															</TD></TR></TABLE>
-														</TD>
-													</TR>
-												</TABLE>
-<!-- END riiplqa:SegVbm8Data/provenance/processStep[$prov_processStep_7_COUNTER] -->
+								<TD>
+<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER] -->
+									#set($qcImageHeight = $numOfImageData * 100)
+									<TABLE>
+										<TR>
+											<TD>
+												<div style="width:600px;overflow:scroll">
+													<a href="$content.getURI("/REST/projects/")$!item.getProperty("riiplqa:SegCat12Data/project")/subjects/$!item.getProperty("riiplqa:SegCat12Data/subject")/experiments/$!item.getProperty("riiplqa:SegCat12Data/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/qcImage")">
+														<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$!item.getProperty("riiplqa:SegCat12Data/project")/subjects/$!item.getProperty("riiplqa:SegCat12Data/subject")/experiments/$!item.getProperty("riiplqa:SegCat12Data/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/qcImage")">
+													</a>
+													#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/qcImage" $item "")
+												</div>
+											</TD>
+									</TR>
+								</TABLE>
+							</TD>
+						</TR>
+					#else
+
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===--- XTK ADDITION  ---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+
+						<TR>
+							<TD>
+								<TABLE $style_table_collapse>
+									<TR>
+										#set ($mainSlice = "")
+										#foreach($imgDataIndex in [0..$numOfImageData])
+											#set ($fn = $item.getProperty("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].imgData[$imgDataIndex].file"))
+											#set ($li = $fn.lastIndexOf("/") + 1 )
+											#set ($fn = $fn.substring($li))
+											#set ($niiDate = $turbineUtils.formatDate($item.getProperty("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].imgData[$imgDataIndex].date"),'yyyyMMdd'))
+											#set ($niiTime = $item.getProperty("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].imgData[$imgDataIndex].time").toString().replace(':',''))
+											#if ($niiTime == "000000")
+												##fallback, hopefully one will work
+												#set ($niiTime = $turbineUtils.formatDate($item.getProperty("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].imgData[$imgDataIndex].date"),'HHmmss'))
 											#end
+											#if ($niiTime.length() == 0)
+												##fallback, hopefully one will work
+												#set ($niiTime = $turbineUtils.formatDate($item.getProperty("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].imgData[$imgDataIndex].date"),'HHmmss'))
+											#end
+											#set ($idBase = "nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${imgDataIndex}")
+												<TD $style_cell_border>
+												 <div id="$idBase" style="background-color: #000; width: 175px; height: 175px;" />
+													<script type="text/javascript">
+														var slice_${idBase} = null;
+														var volume_${idBase} = null;
+														addLoadEvent(function () {
+															#set ($urlFile = $content.getURI("/REST/projects/").concat("$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/${niiDate}_${niiTime}/$fn") )
+															#newVolumeAnd2DSlice( "volume_${idBase}" "slice_${idBase}" $urlFile $idBase)
+
+															#if ($mainSlice == "")
+																#set ($mainSlice = "slice_${idBase}")
+															#else
+																slice_${idBase}.camera.view=${mainSlice}.camera.view;
+															#end
+												
+															slice_${idBase}.interactor.onMouseWheel = function(right) { syncTo$idBase(); };
+															
+														});
+														function syncTo$idBase() {
+															#foreach($indx in [0..$numOfImageData])
+																#if ($indx != $imgDataIndex)
+																	volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.indexX=volume_${idBase}.indexX;
+																	volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.indexY=volume_${idBase}.indexY;
+																	volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.indexZ=volume_${idBase}.indexZ;
+																	volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.modified();
+																#end
+															#end
+														}
+												</script>
+											</TD>
 										#end
-									</TD></TR></TABLE>
-								</TD>
-							</TR>
-						</TABLE>
-<!-- END riiplqa:SegVbm8Data/provenance -->
+									</TR>
+								</TABLE>
+								<script type="text/javascript">
+									function setSagittal_${riipl_SegCat12Data_qcSession_8_COUNTER}() {
+										var orient='SAGITTAL';
+										#foreach($indx in [0..$numOfImageData])
+											slice_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.orientation = orient;
+											volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.modified();
+											slice_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.render();
+										#end
+										return false;
+									}
+									function setCoronal_${riipl_SegCat12Data_qcSession_8_COUNTER}() {
+										var orient='CORONAL';
+										#foreach($indx in [0..$numOfImageData])
+											slice_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.orientation = orient;
+											volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.modified();
+											slice_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.render();
+										#end
+										return false;
+									}
+									function setAxial_${riipl_SegCat12Data_qcSession_8_COUNTER}() {
+										var orient='AXIAL';
+										#foreach($indx in [0..$numOfImageData])
+											slice_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.orientation = orient;
+											volume_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.modified();
+											slice_nii_${riipl_SegCat12Data_qcSession_8_COUNTER}_${indx}.render();
+										#end
+										return false;
+									}
+								</script>
+								<input type="button" onClick="setSagittal_${riipl_SegCat12Data_qcSession_8_COUNTER}()" value="Set Sagittal" >
+								<input type="button" onClick="setCoronal_${riipl_SegCat12Data_qcSession_8_COUNTER}()" value="Set Coronal">
+								<input type="button" onClick="setAxial_${riipl_SegCat12Data_qcSession_8_COUNTER}()" value="Set Axial">
+							</TD>
+						</TR>
+						<TR>
+
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===--- XTK ADDITION END ===---===---===---===---===---===---===---===---===---
+## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
+
+									#end
+
+<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData -->
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Image Quality (Images above are in the order of images below)</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE $style_table_collapse>
+												<TR>
+													<TD $style_cell_border>file</TD>
+													<TD $style_cell_border>timestamp</TD>
+													<TD $style_cell_border>quality</TD>
+												</TR>
+												#foreach($riipl_SegCat12Data_qcSession_imgData_9_COUNTER in [0..$numOfImageData])
+													<TR>
+														<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData[$riipl_SegCat12Data_qcSession_imgData_9_COUNTER]/file" $item "" $vr)</TD>
+														<TD $style_cell_border>
+															#highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $riipl_SegCat12Data_qcSession_8_COUNTER ".imgData[$riipl_SegCat12Data_qcSession_imgData_9_COUNTER].date" $item $vr $years $errorColor)
+															#highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $riipl_SegCat12Data_qcSession_8_COUNTER ".imgData[$riipl_SegCat12Data_qcSession_imgData_9_COUNTER].time" $item $errorColor)
+														</TD>
+														<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData[$riipl_SegCat12Data_qcSession_imgData_9_COUNTER]/quality" $item $status $vr)</TD>
+														#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData[$riipl_SegCat12Data_qcSession_imgData_9_COUNTER]/riipl_SegCat12Data_qcSession_imgData_id" $item "")
+													</TR>
+												#end
+											</TABLE>
+										</TD>
+									</TR>
+<!-- END riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData -->
+
+
+
+								<TABLE>
+<!-- BEGIN riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData/tissue -->
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Tissue Report:</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE $style_table_collapse>
+												<TR>
+													<TD $style_cell_border>Gray Matter Volume</TD>
+													<TD $style_cell_border>White Matter Volume</TD>
+													<TD $style_cell_border>CSF Volume</TD>
+												</TR>
+												#foreach($riipl_SegCat12Data_qcSession_tissue_9_COUNTER in [0..0])
+													<TR>
+														#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].gm" $item "" $vr "932" "455" $errorColor $style_cell_border)
+														#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].wm" $item "" $vr "691" "365" $errorColor $style_cell_border)
+														#highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].csf"$item "" $vr "371" "140" $errorColor $style_cell_border)
+													</TR>
+													#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]]/tisData[0]/tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER]/segImg" $item "")</TD>
+													#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData[0]/tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER]/riipl_SegCat12Data_qcSession_tissue_id" $item "")
+												#end
+												<TR>
+													<TD colspan="16"><hr></TD>
+												</TR>
+												<TR>
+													<TD $style_cell_border colspan="2">Tissue CSV File</TD>
+													<TD $style_cell_border colspan="14">#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData[0]/file" $item "" $vr)</TD>
+												</TR>
+												<TR>
+													<TD $style_cell_border colspan="2">Tissue File Timestamp</TD>
+													<TD $style_cell_border colspan="14">
+														#highlightDifferentDate( "riiplqa:SegCat12Data.qcSession" $riipl_SegCat12Data_qcSession_8_COUNTER ".tisData[0]/filedate" $item $vr $years $errorColor)
+														#highlightDifferentTime( "riiplqa:SegCat12Data.qcSession" $riipl_SegCat12Data_qcSession_8_COUNTER ".tisData[0]/filetime" $item $errorColor)
+													</TD>
+												</TR>
+												</TR>
+												<TR>
+													<TD $style_cell_border colspan="2">Quality</TD>
+													<TD $style_cell_border colspan="14">#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData[0]/quality" $item $status $vr)</TD></TR>
+												</TR>
+												#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData/parameter" $item "")
+											</TABLE>
+										</TD>
+									</TR>
+<!-- END riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/tisData/tissue -->
+
+
+								
+								
+									<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Sign-Off Information</font></TH></TR>
+									<TR>
+										<TD align="left" valign="top">
+											<TABLE>
+												<TR><TD>Assesor</TD><TD>#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/username" $item "" $vr)</TD></TR>
+												<TR>
+													<TD>Assesment Date</TD>
+													<TD>
+														#riiplShowDate("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/date" $item "" $vr)
+														#riiplShowTime("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/time" $item "" $vr)
+													</TD>
+												</TR>
+												<TR><TD>Final Quality</TD><TD>#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/quality" $item $status $vr)</TD></TR>
+												<TR><TD>Comments</TD><TD>#riiplShowString("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/comments" $item "" $vr)</TD></TR>
+												#xdatHiddenBox("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/riipl_SegCat12Data_qcSession_id" $item "")
+											</TABLE>
+										</TD>
+									</TR>
+
+								</TABLE>
+<!-- END riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER] -->
+							</TD>
+						</TR>
+					</TABLE>
+					#end
 					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($xnat_experimentData_share_9_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/sharing/share").size() - 1)
-							#if($xnat_experimentData_share_9_NUM_ROWS>=0)
-								#foreach($xnat_experimentData_share_9_COUNTER in [0..$xnat_experimentData_share_9_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>share</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER]/share")</TD></TR>
-													<TR><TD>label</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER]/label")</TD></TR>
-													<TR><TD>project</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER]/project")</TD></TR>
-													<TR><TD>visit</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER]/visit")</TD></TR>
-													<TR><TD>protocol</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER]/protocol")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/sharing/share[$xnat_experimentData_share_9_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-<!-- BEGIN riiplqa:SegVbm8Data/investigator -->
-						<TABLE>
-							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/investigator</font></TH></TR>
-							<TR>
-								<TD align="left" valign="top">
-									<TABLE>
-										<TR><TD>title</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/title")</TD></TR>
-										<TR><TD>firstname</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/firstname")</TD></TR>
-										<TR><TD>lastname</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/lastname")</TD></TR>
-										<TR><TD>institution</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/institution")</TD></TR>
-										<TR><TD>department</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/department")</TD></TR>
-										<TR><TD>email</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/email")</TD></TR>
-										<TR><TD>phone</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/phone")</TD></TR>
-										<TR><TD>ID</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/investigator/ID")</TD></TR>
-									</TABLE>
-								</TD>
-							</TR>
-						</TABLE>
-<!-- END riiplqa:SegVbm8Data/investigator -->
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-<!-- BEGIN riiplqa:SegVbm8Data/validation -->
-						<TABLE>
-							<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/validation</font></TH></TR>
-							<TR>
-								<TD align="left" valign="top">
-									<TABLE>
-										<TR><TD>method</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/validation/method")</TD></TR>
-										<TR><TD>date</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/validation/date")</TD></TR>
-										<TR><TD>notes</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/validation/notes")</TD></TR>
-										<TR><TD>validated_by</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/validation/validated_by")</TD></TR>
-										<TR><TD>status</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/validation/status")</TD></TR>
-									</TABLE>
-								</TD>
-							</TR>
-						</TABLE>
-<!-- END riiplqa:SegVbm8Data/validation -->
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($xnat_abstractResource_12_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/resources/resource").size() - 1)
-							#if($xnat_abstractResource_12_NUM_ROWS>=0)
-								#foreach($xnat_abstractResource_12_COUNTER in [0..$xnat_abstractResource_12_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>note</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/note")</TD></TR>
-													<TR><TD>label</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/label")</TD></TR>
-													<TR><TD>file_count</TD><TD>$!item.getIntegerProperty("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/file_count")</TD></TR>
-													<TR><TD>file_size</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/file_size")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE><TR><TD>
-													#set($xnat_abstractResource_tag_13_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/tags/tag").size() - 1)
-													#if($xnat_abstractResource_tag_13_NUM_ROWS>=0)
-														#foreach($xnat_abstractResource_tag_13_COUNTER in [0..$xnat_abstractResource_tag_13_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/tags/tag[$xnat_abstractResource_tag_13_COUNTER] -->
-															<TABLE>
-																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/tags/tag[$xnat_abstractResource_tag_13_COUNTER]</font></TH></TR>
-																<TR>
-																	<TD align="left" valign="top">
-																		<TABLE>
-																			<TR><TD>tag</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/tags/tag[$xnat_abstractResource_tag_13_COUNTER]/tag")</TD></TR>
-																			<TR><TD>name</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/tags/tag[$xnat_abstractResource_tag_13_COUNTER]/name")</TD></TR>
-																		</TABLE>
-																	</TD>
-																</TR>
-															</TABLE>
-<!-- END riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER]/tags/tag[$xnat_abstractResource_tag_13_COUNTER] -->
-														#end
-													#end
-												</TD></TR></TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/resources/resource[$xnat_abstractResource_12_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($xnat_experimentData_field_14_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/fields/field").size() - 1)
-							#if($xnat_experimentData_field_14_NUM_ROWS>=0)
-								#foreach($xnat_experimentData_field_14_COUNTER in [0..$xnat_experimentData_field_14_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/fields/field[$xnat_experimentData_field_14_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/fields/field[$xnat_experimentData_field_14_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>field</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/fields/field[$xnat_experimentData_field_14_COUNTER]/field")</TD></TR>
-													<TR><TD>name</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/fields/field[$xnat_experimentData_field_14_COUNTER]/name")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/fields/field[$xnat_experimentData_field_14_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
-					</TD>
-				</TR>
-				<TR>
-					<TD align="left" valign="top">
-						<TABLE><TR><TD>
-							#set($riiplqa_SegVbm8Data_qcSession_15_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/qcSession").size() - 1)
-							#if($riiplqa_SegVbm8Data_qcSession_15_NUM_ROWS>=0)
-								#foreach($riiplqa_SegVbm8Data_qcSession_15_COUNTER in [0..$riiplqa_SegVbm8Data_qcSession_15_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER] -->
-									<TABLE>
-										<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]</font></TH></TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE>
-													<TR><TD>qcImage</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/qcImage")</TD></TR>
-													<TR><TD>quality</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/quality")</TD></TR>
-													<TR><TD>username</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/username")</TD></TR>
-													<TR><TD>date</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/date")</TD></TR>
-													<TR><TD>time</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/time")</TD></TR>
-													<TR><TD>comments</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/comments")</TD></TR>
-												</TABLE>
-											</TD>
-										</TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE><TR><TD>
-													#set($riiplqa_SegVbm8Data_qcSession_imgData_16_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData").size() - 1)
-													#if($riiplqa_SegVbm8Data_qcSession_imgData_16_NUM_ROWS>=0)
-														#foreach($riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER in [0..$riiplqa_SegVbm8Data_qcSession_imgData_16_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER] -->
-															<TABLE>
-																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER]</font></TH></TR>
-																<TR>
-																	<TD align="left" valign="top">
-																		<TABLE>
-																			<TR><TD>file</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER]/file")</TD></TR>
-																			<TR><TD>date</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER]/date")</TD></TR>
-																			<TR><TD>time</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER]/time")</TD></TR>
-																			<TR><TD>quality</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER]/quality")</TD></TR>
-																		</TABLE>
-																	</TD>
-																</TR>
-															</TABLE>
-<!-- END riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/imgData[$riiplqa_SegVbm8Data_qcSession_imgData_16_COUNTER] -->
-														#end
-													#end
-												</TD></TR></TABLE>
-											</TD>
-										</TR>
-										<TR>
-											<TD align="left" valign="top">
-												<TABLE><TR><TD>
-													#set($riiplqa_SegVbm8Data_qcSession_tisData_17_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData").size() - 1)
-													#if($riiplqa_SegVbm8Data_qcSession_tisData_17_NUM_ROWS>=0)
-														#foreach($riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER in [0..$riiplqa_SegVbm8Data_qcSession_tisData_17_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER] -->
-															<TABLE>
-																<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]</font></TH></TR>
-																<TR>
-																	<TD align="left" valign="top">
-																		<TABLE>
-																			<TR><TD>file</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/file")</TD></TR>
-																			<TR><TD>filedate</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/filedate")</TD></TR>
-																			<TR><TD>filetime</TD><TD>$!item.getProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/filetime")</TD></TR>
-																			<TR><TD>quality</TD><TD>$!item.getStringProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/quality")</TD></TR>
-																		</TABLE>
-																	</TD>
-																</TR>
-																<TR>
-																	<TD align="left" valign="top">
-																		<TABLE><TR><TD>
-																			#set($riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_NUM_ROWS=$item.getChildItems("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue").size() - 1)
-																			#if($riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_NUM_ROWS>=0)
-																				#foreach($riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER in [0..$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_NUM_ROWS])
-<!-- BEGIN riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue[$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER] -->
-																					<TABLE>
-																						<TR><TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue[$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER]</font></TH></TR>
-																						<TR>
-																							<TD align="left" valign="top">
-																								<TABLE>
-																									<TR><TD>gm</TD><TD>$!item.getDoubleProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue[$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER]/gm")</TD></TR>
-																									<TR><TD>wm</TD><TD>$!item.getDoubleProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue[$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER]/wm")</TD></TR>
-																									<TR><TD>csf</TD><TD>$!item.getDoubleProperty("riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue[$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER]/csf")</TD></TR>
-																								</TABLE>
-																							</TD>
-																						</TR>
-																					</TABLE>
-<!-- END riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER]/tissue[$riiplqa_SegVbm8Data_qcSession_tisData_tissue_18_COUNTER] -->
-																				#end
-																			#end
-																		</TD></TR></TABLE>
-																	</TD>
-																</TR>
-															</TABLE>
-<!-- END riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER]/tisData[$riiplqa_SegVbm8Data_qcSession_tisData_17_COUNTER] -->
-														#end
-													#end
-												</TD></TR></TABLE>
-											</TD>
-										</TR>
-									</TABLE>
-<!-- END riiplqa:SegVbm8Data/qcSession[$riiplqa_SegVbm8Data_qcSession_15_COUNTER] -->
-								#end
-							#end
-						</TD></TR></TABLE>
+					<TD valign="top" align="right">
+						#elementActionsBox($element $search_field $search_value $data.getSession().getAttribute("user") $item)
 					</TD>
 				</TR>
 			</TABLE>
-<!-- END riiplqa:SegVbm8Data -->
+<!-- END riiplqa:SegCat12Data -->
 		</TD>
 	</TR>
-</TABLE><BR>#parse("/screens/ReportProjectSpecificFields.vm")
+</TABLE>
+
+<BR>#parse("/screens/ReportProjectSpecificFields.vm")
