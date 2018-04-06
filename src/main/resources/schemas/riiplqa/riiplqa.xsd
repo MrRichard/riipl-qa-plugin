@@ -116,6 +116,7 @@
 	</xs:complexType>
 	
 	<xs:complexType name="NormCat12PCASLbhData">
+		<xs:complexContent>
 			<xs:extension base="xnat:mrAssessorData">
 				<xs:annotation>
 					<xs:documentation>CAT12 Normalization of PCASL Breath Hold QA Report (non-PVC)</xs:documentation>

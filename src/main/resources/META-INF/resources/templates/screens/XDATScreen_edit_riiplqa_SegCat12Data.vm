@@ -42,15 +42,15 @@ $page.setVlinkColor($ui.vlink)
 	#if ($fn.toLowerCase().contains('_cbf'))
 		${volumeVar}.file = '$fileUrl';
 		${volumeVar}.labelmap.file = '$fileUrl';
-		#${volumeVar}.labelmap.colortable.file = '/style/ASL_colormap.txt';
+		${volumeVar}.labelmap.colortable.file = '/style/ASL_colormap.txt';
 	#elseif ($fn.toLowerCase().contains('_att'))
 		${volumeVar}.file = '$fileUrl';
 		${volumeVar}.labelmap.file = '$fileUrl';
-		#${volumeVar}.labelmap.colortable.file = '/style/ATT_colormap.txt';
+		${volumeVar}.labelmap.colortable.file = '/style/ATT_colormap.txt';
 	#elseif ($fn.toLowerCase().contains('_lesion_'))
 		${volumeVar}.file = '$flair';
 		${volumeVar}.labelmap.file = '$fileUrl';
-		#${volumeVar}.labelmap.colortable.file = '/style/LST8_colormap.txt';
+		${volumeVar}.labelmap.colortable.file = '/style/LST8_colormap.txt';
 	#else
 		${volumeVar}.file = '$fileUrl';
 	#end
