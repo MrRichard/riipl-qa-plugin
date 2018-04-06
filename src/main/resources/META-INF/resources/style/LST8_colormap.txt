@@ -1,0 +1,4 @@
+# color_index label Red Green Blue Alpha
+0       LST_COLORMAP   0       0       0       0       
+1       LST_COLORMAP   255      0       0       255       
+

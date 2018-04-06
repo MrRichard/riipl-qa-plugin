@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+$page.setTitle("XDAT")
+$page.setLinkColor($ui.alink)
+$page.setVlinkColor($ui.vlink)
+#set($months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+#set($days = [1..31])
+#set($years = [$!turbineUtils.getYear()..1900])
+
+#set( $namespace = "riiplqa")
+#set( $datatype = "NormCat12PCASL8Data")
+#set( $sequenceName = "8 Phase PCASL")
+#parse("/screens/Cat12NormalizationEdit.vm")

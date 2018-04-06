@@ -3,7 +3,11 @@
 
 	<xs:import namespace="http://nrg.wustl.edu/xnat" schemaLocation="../xnat/xnat.xsd"/>
 	
-	<xs:element name="SegCat12"	type="riiplqa:SegCat12Data"/>
+	<xs:element name="SegCat12"					type="riiplqa:SegCat12Data"/>
+	<xs:element name="NormCat12PCASL8"          type="riiplqa:NormCat12PCASL8Data"/>
+	<xs:element name="NormCat12PCASLbh"         type="riiplqa:NormCat12PCASLbhData"/>
+	<xs:element name="NormCat12DTI"             type="riiplqa:NormCat12DTIData"/>
+	<xs:element name="NormCat12NODDI"			type="riiplqa:NormCat12NODDIData"/>
 	
 	<xs:complexType name="SegCat12Data">
 		<xs:complexContent>
@@ -32,6 +36,7 @@
 													<xs:attribute name="gm" type="xs:float"/>
 													<xs:attribute name="wm" type="xs:float"/>
 													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="tiv" type="xs:float"/>
 												</xs:complexType>
 											</xs:element>
 										</xs:sequence>
@@ -53,5 +58,225 @@
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>	
+	</xs:complexType>
+	
+	<xs:complexType name="NormCat12PCASL8Data">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>CAT12 Normalization of 8 Phase PCASL QA Report (non-PVC)</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" type="xs:string" use="optional"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="NormCat12PCASLbhData">
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>CAT12 Normalization of PCASL Breath Hold QA Report (non-PVC)</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" use="optional" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="NormCat12DTIData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>CAT12 Normalization of DTI QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" use="optional" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="NormCat12NODDIData">
+		<xs:complexContent>
+			<xs:extension base="xnat:mrAssessorData">
+				<xs:annotation>
+					<xs:documentation>CAT12 Normalization of NODDI QA Report</xs:documentation>
+				</xs:annotation>
+				<xs:sequence minOccurs="0">
+					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence minOccurs="0">
+								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+										<xs:attribute name="time" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="tisData" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="tissue" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="imageFile" type="xs:string"/>
+													<xs:attribute name="imageType" type="xs:string"/>
+													<xs:attribute name="gm" type="xs:float"/>
+													<xs:attribute name="wm" type="xs:float"/>
+													<xs:attribute name="csf" type="xs:float"/>
+													<xs:attribute name="gmThresh" type="xs:float"/>
+													<xs:attribute name="wmThresh" type="xs:float"/>
+													<xs:attribute name="csfThresh" type="xs:float"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="file" type="xs:string" use="required"/>
+										<xs:attribute name="filedate" type="xs:date" use="required"/>
+										<xs:attribute name="filetime" type="xs:time" use="required"/>
+										<xs:attribute name="quality" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
+							<xs:attribute name="quality" type="xs:string" use="required"/>
+							<xs:attribute name="username" type="xs:string" use="required"/>
+							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="time" type="xs:time" use="required"/>
+							<xs:attribute name="comments" use="optional" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+		
 </xs:schema>

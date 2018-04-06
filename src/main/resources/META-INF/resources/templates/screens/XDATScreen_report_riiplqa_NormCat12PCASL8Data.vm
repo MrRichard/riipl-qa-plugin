@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+$page.setTitle("SegVbm8 Details")
+$page.setLinkColor($ui.alink)
+$page.setVlinkColor($ui.vlink)
+#if ($data.getParameters().getString("popup"))
+	#set ($popup = $data.getParameters().getString("popup") )
+	#set ($popup = "false")
+#end
+
+#set( $namespace = "riiplqa")
+#set( $datatype = "NormCat12PCASL8Data")
+#set( $sequenceName = "8 Phase PCASL")
+#parse("/screens/Cat12NormalizationReport.vm")

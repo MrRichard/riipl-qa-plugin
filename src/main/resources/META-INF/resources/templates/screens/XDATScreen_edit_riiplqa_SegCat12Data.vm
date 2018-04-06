@@ -14,7 +14,7 @@ $page.setVlinkColor($ui.vlink)
 #set($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
 
 #macro ( includeXtk )
-	<script type="text/javascript" src="http://get.goXTK.com/xtk.js"></script>
+	<script type="text/javascript" LANGUAGE="JavaScript" src="$content.getURI('scripts/xtk.js')"> </script>
 	<script type="text/javascript">
 		function addLoadEvent(func) {
 				var oldonload = window.onload;
@@ -42,15 +42,15 @@ $page.setVlinkColor($ui.vlink)
 	#if ($fn.toLowerCase().contains('_cbf'))
 		${volumeVar}.file = '$fileUrl';
 		${volumeVar}.labelmap.file = '$fileUrl';
-		##${volumeVar}.labelmap.colortable.file = '/xnat/misc_riipl/ASL_colormap.txt';
+		#${volumeVar}.labelmap.colortable.file = '/style/ASL_colormap.txt';
 	#elseif ($fn.toLowerCase().contains('_att'))
 		${volumeVar}.file = '$fileUrl';
 		${volumeVar}.labelmap.file = '$fileUrl';
-		##${volumeVar}.labelmap.colortable.file = '/xnat/misc_riipl/ATT_colormap.txt';
+		#${volumeVar}.labelmap.colortable.file = '/style/ATT_colormap.txt';
 	#elseif ($fn.toLowerCase().contains('_lesion_'))
 		${volumeVar}.file = '$flair';
 		${volumeVar}.labelmap.file = '$fileUrl';
-		##${volumeVar}.labelmap.colortable.file = '/xnat/misc_riipl/LST8_colormap.txt';
+		#${volumeVar}.labelmap.colortable.file = '/style/LST8_colormap.txt';
 	#else
 		${volumeVar}.file = '$fileUrl';
 	#end
@@ -428,12 +428,14 @@ $page.setVlinkColor($ui.vlink)
 											<TD $style_cell_border>Gray Matter Volume</TD>
 											<TD $style_cell_border>White Matter Volume</TD>
 											<TD $style_cell_border>CSF Matter Volume</TD>
+											<TD $style_cell_border>Total Intracranial Volume</TD>
 										</TR>
 										#foreach($tisDataIndex in [0..0])
 											<TR>
-												<TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].gm")</TD>
-												<TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].wm")</TD>
-												<TD>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].csf")</TD>
+												<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].gm")</TD>
+												<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].wm")</TD>
+												<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].csf")</TD>
+												<TD $style_cell_border>#riiplShowString("riiplqa:SegCat12Data.qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER].tisData[0].tissue[$riipl_SegCat12Data_qcSession_tissue_9_COUNTER].tiv")</TD>
 												##highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "932" "455" $errorColor $style_cell_border)
 												##highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "691" "365" $errorColor $style_cell_border)
 												##highlightGreaterThanLessThanCell("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "371" "140" $errorColor $style_cell_border)
@@ -444,7 +446,7 @@ $page.setVlinkColor($ui.vlink)
 											<TD colspan="16"><hr></TD>
 										</TR>
 										<TR>
-											<TD $style_cell_border colspan="2">Tissue CSV File</TD>
+											<TD $style_cell_border colspan="2">Tissue MAT File</TD>
 											<TD $style_cell_border colspan="14">#riiplShowString("riiplqa:SegCat12Data.qcSession[$qcSessionIndex].tisData[0].file" $item "" $vr)</TD>
 										</TR>
 										<TR>
