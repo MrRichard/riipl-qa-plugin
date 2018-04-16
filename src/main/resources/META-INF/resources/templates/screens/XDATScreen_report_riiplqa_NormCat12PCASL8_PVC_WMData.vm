@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+$page.setTitle("NormCat12PCASL8 Details")
+$page.setLinkColor($ui.alink)
+$page.setVlinkColor($ui.vlink)
+#if ($data.getParameters().getString("popup"))
+	#set ($popup = $data.getParameters().getString("popup") )
+	#set ($popup = "false")
+#end
+
+#set( $namespace = "riiplqa")
+#set( $datatype = "NormCat12PCASL8PVCWMData")
+#set( $sequenceName = "8 Phase PCASL PVC WM")
+#parse("/screens/Cat12NormalizationReport.vm")

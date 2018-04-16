@@ -29,7 +29,7 @@ $page.setVlinkColor($ui.vlink)
 					}
 				}
 			}
-		</script>
+	</script>
 #end
 
 #macro ( newVolumeAnd2DSlice $volumeVar $sliceVar $fileUrl $idBase)

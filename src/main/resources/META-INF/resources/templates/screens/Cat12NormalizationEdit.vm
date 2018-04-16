@@ -340,7 +340,7 @@
 																	var slice_${idBase} = null;
 																	var volume_${idBase} = null;
 																	addLoadEvent(function () {
-																		#set ($urlFile = $content.getURI("/data/projects/").concat("$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/${datatype}/$fn") )
+																		#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${datatype}/${fn}") )
 
 																		##Special case names for image overlays
 																		##for LST8
