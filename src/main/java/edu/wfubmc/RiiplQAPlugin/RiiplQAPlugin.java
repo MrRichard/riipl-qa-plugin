@@ -15,7 +15,7 @@ import org.nrg.framework.annotations.XnatDataModel;
  */
 @XnatPlugin(
 	value = "riipl-qa-plugin",
-	name = "RIIPL XNAT QA Plugin Ver 0.0.3",
+	name = "RIIPL XNAT QA Plugin Ver 0.0.4",
 	description = "Plugin for RIIPL Pipeline-specific QA",
 	dataModels = {
 			@XnatDataModel(
@@ -31,9 +31,9 @@ import org.nrg.framework.annotations.XnatDataModel;
 					code = "QA"
 				),
 			@XnatDataModel(
-					value= "riiplqa:NormCat12PCASLbhData",
-					singular = "QC PCASL BH CAT12 Seg Report",
-					plural = "QC PCASL BH CAT12 Seg Reports",
+					value= "riiplqa:NormCat12PCASLData",
+					singular = "QC PCASL CAT12 Seg Report",
+					plural = "QC PCASL CAT12 Seg Reports",
 					code = "QA"
 				),
 			@XnatDataModel(
@@ -51,5 +51,5 @@ import org.nrg.framework.annotations.XnatDataModel;
 	}
 )
 
-public class RiiplQAPlugin{	
+public class RiiplQAPlugin{
 }

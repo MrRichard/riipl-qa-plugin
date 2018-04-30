@@ -8,6 +8,6 @@ $page.setVlinkColor($ui.vlink)
 #end
 
 #set( $namespace = "riiplqa")
-#set( $datatype = "NormCat12PCASLData")
-#set( $sequenceName = "PCASL")
+#set( $datatype = "NormCat12NODDIData")
+#set( $sequenceName = "NODDI")
 #parse("/screens/Cat12NormalizationReport.vm")

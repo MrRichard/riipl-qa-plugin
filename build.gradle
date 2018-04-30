@@ -33,7 +33,7 @@ buildscript {
 }
 
 group 'org.nrg.xnat.plugins'
-version '0.0.3'
+version '0.0.4'
 
 // TODO: This is the minimum set of Gradle plugins required to build most XNAT plugins. You may include many others, including plugins for testing and test coverage, IDE integration, and more.
 apply plugin: 'io.spring.dependency-management'
@@ -96,39 +96,39 @@ dependencies {
     implementation("stratum:stratum") {
         transitive = false
     }
-    
+
     // https://mvnrepository.com/artifact/ecs/ecs
 	compile group: 'ecs', name: 'ecs', version: '1.4.2'
-    
+
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore
 	compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3.2'
-	
+
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3'
 
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient-cache
 	compile group: 'org.apache.httpcomponents', name: 'httpclient-cache', version: '4.3.3'
-	
+
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
 	compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.3'
-	
+
 	// https://mvnrepository.com/artifact/jfree/jcommon
 	compile group: 'jfree', name: 'jcommon', version: '1.0.16'
-	
+
 	// https://mvnrepository.com/artifact/org.jfree/jfreechart
 	compile group: 'org.jfree', name: 'jfreechart', version: '1.0.14'
-	
+
 	// https://mvnrepository.com/artifact/org.apache.velocity/velocity-tools
 	compile group: 'org.apache.velocity', name: 'velocity-tools', version: '2.0'
-	
+
 	// https://mvnrepository.com/artifact/net.imagej/ij
 	compile group: 'net.imagej', name: 'ij', version: '1.49j'
-	
+
 	// https://mvnrepository.com/artifact/org.json/json
 	compile group: 'org.json', name: 'json', version: '20160810'
-	
+
 	compile files('./libs/niftijlib-0.2.0.jar')
-	
+
 
     implementation "log4j:log4j"
     implementation "io.springfox:springfox-swagger2"
