@@ -8,5 +8,5 @@ $page.setVlinkColor($ui.vlink)
 
 #set( $namespace = "riiplqa")
 #set( $datatype = "NormCat12PCASL8Data")
-#set( $sequenceName = "PCASL")
+#set( $sequenceName = "8 Phase PCASL")
 #parse("/screens/Cat12NormalizationEdit.vm")
