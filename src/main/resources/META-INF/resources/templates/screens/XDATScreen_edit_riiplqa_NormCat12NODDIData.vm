@@ -7,6 +7,6 @@ $page.setVlinkColor($ui.vlink)
 #set($years = [$!turbineUtils.getYear()..1900])
 
 #set( $namespace = "riiplqa")
-#set( $datatype = "NormCat12PCASL8PVCWMData")
-#set( $sequenceName = "8 Phase PCASL PVC WM")
+#set( $datatype = "NormCat12NODDIData")
+#set( $sequenceName = "NODDI")
 #parse("/screens/Cat12NormalizationEdit.vm")

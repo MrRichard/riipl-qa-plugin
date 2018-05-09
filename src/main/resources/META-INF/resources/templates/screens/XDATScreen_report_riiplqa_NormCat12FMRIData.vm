@@ -8,6 +8,6 @@ $page.setVlinkColor($ui.vlink)
 #end
 
 #set( $namespace = "riiplqa")
-#set( $datatype = "NormCat12PCASL8PVCWMData")
-#set( $sequenceName = "8 Phase PCASL PVC WM")
+#set( $datatype = "NormCat12FMRIData")
+#set( $sequenceName = "fMRI")
 #parse("/screens/Cat12NormalizationReport.vm")
