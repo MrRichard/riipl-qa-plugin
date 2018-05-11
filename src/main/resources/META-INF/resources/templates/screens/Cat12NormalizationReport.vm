@@ -36,8 +36,7 @@
 
 	${volumeVar} = new X.volume();
 	#if ($fn.toLowerCase().contains('_cbf'))
-		${volumeVar}.file = '$fileUrl';
-		${volumeVar}.visible = FALSE;
+		${volumeVar}.file = "$content.getURI('scripts/empty.nii.gz')";
 		${volumeVar}.labelmap.file = '$fileUrl';
 		${volumeVar}.labelmap.colortable.file = '/style/ASL_colormap.txt';
 	#elseif ($fn.toLowerCase().contains('_att'))
@@ -95,13 +94,9 @@
 	#riiplHiddenTimestamp($name $item "")
 #end
 
-## Make sure that the "$value" variable is in quotes ""
-## Using an odd mathTool min === thresh because > is not available for Doubles
-## Using an odd mathTool min === thresh because > is not available for Doubles
-## The checking againsts max(thresh,thresh) is because of some odd type comparisons
 #macro( highlightGreaterThanCell $name $item $default $vr $value $color $cellStyle)
 	#set ( $thresh = $mathTool.toDouble($value) )
-	#set ( $v      = $mathTool.toDouble($!item.getProperty($name)) )
+	#set ( $v = $mathTool.toDouble($!item.getProperty($name)) )
 	#if ( $mathTool.min($thresh,$v) == $mathTool.min($thresh,$thresh))
 		<TD ${cellStyle} bgcolor="${color}" >#riiplShowString($name $item $default $vr) &gt $thresh</TD>
 	#else
@@ -109,9 +104,6 @@
 	#end
 #end
 
-## Make sure that the "$value" variable is in quotes ""
-## Using an odd mathTool min === thresh because > is not available for Doubles
-## The checking againsts max(thresh,thresh) is because of some odd type comparisons
 #macro( highlightGreaterThanLessThanCell $name $item $default $vr $valueHi $valueLo $color $cellStyle)
 	#set ( $threshHi = $mathTool.toDouble($valueHi) )
 	#set ( $threshLo = $mathTool.toDouble($valueLo) )
@@ -243,8 +235,7 @@
 									<HR>
 								</TD>
 							</TR>
-							<tr>
-								<th align="left">SegCat12 ID</th>
+								<th align="left">QC Report ID</th>
 								<TD align="left">$item.getProperty("${elementName}.ID")</TD>
 							</tr>
 							<tr>
@@ -270,9 +261,7 @@
 	#set ($project = $!item.getProperty("${elementName}/project"))
 	#set ($subject = $!item.getProperty("${elementName}/subject"))
 	#set ($qc_id  = $!item.getProperty("${elementName}/imageSession_ID"))
-
-	##set ($numOfQCSessions = $item.getChildItems("${elementName}.qcSession").size() - 1)
-	#set ($numOfQCSessions = 1)
+	#set ($numOfQCSessions = $item.getChildItems("${elementName}.qcSession").size() - 1)
 	#foreach($qcSessionIndex in [0..$numOfQCSessions])
 		#set($numOfImageData = -1)
 		#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].imgData.file").size() - 1)
@@ -379,6 +368,11 @@
 															</script>
 														</TD>
 													#end
+													#if ($datatype == "NormCat12PCASL8Data")
+														<TD>
+														<img src="$content.getURI('images/colorbar.png')" />
+														</TD>
+													#end
 												</TR>
 												<TR>
 													#foreach($imgDataIndex in [0..$numOfImageData])
@@ -436,9 +430,9 @@
 										<TABLE $style_table_collapse>
 											<TR>
 												<TD $style_cell_border>&nbsp;</TD>
-												<TD $style_cell_border>file</TD>
-												<TD $style_cell_border>timestamp</TD>
-												<TD $style_cell_border>quality</TD>
+												<TD $style_cell_border>File</TD>
+												<TD $style_cell_border>Timestamp</TD>
+												<TD $style_cell_border>Quality</TD>
 											</TR>
 											#foreach($imgDataIndex in [0..$numOfImageData])
 												<TR>
@@ -446,9 +440,10 @@
 													<TD $style_cell_border>$nTxt</TD>
 													<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file")</TD>
 													<TD $style_cell_border>
-														###highlightDifferentDate( "${elementName}.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].date" $item $vr $years $errorColor)
 														###highlightDifferentTime( "${elementName}.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].time" $item $errorColor)
-														</TD>
+														#riiplShowDate("${elementName}.qcSession[$qcSessionIndex].date" $item $vr $years)
+														#riiplShowTime("${elementName}.qcSession[$qcSessionIndex].time" $item $vr $years)
+													</TD>
 													<TD $style_cell_border>
 														#if($qcSessionIndex == $numOfQCSessions)
 															$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].quality")
@@ -465,231 +460,89 @@
 
 
 
-	<!--								<TABLE>-->
+	<!-- Tissue Report <TABLE>-->
 	<!-- BEGIN ${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue -->
-							#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue.imageFile").size() - 1)
-							#if ($tmp > 0)
-								#set( $name = "${elementName}.qcSession[$qcSessionIndex].tisData")
-								<TR>
-									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Tissue Report: ${elementName}.qcSession[$qcSessionIndex].tisData</font></TH>
-								</TR>
-								<TR>
-									<TD align="left" valign="top">
-										<TABLE $style_table_collapse>
-											<TR>
-												<TD $style_cell_border>Image file</TD>
-												<TD $style_cell_border>Image type</TD>
-												<TD $style_cell_border>Gray Matter Volume</TD>
-												<TD $style_cell_border>White Matter Volume</TD>
-												<TD $style_cell_border>CSF Matter Volume</TD>
-												<TD $style_cell_border>Approximate GM Masking Threshold</TD>
-												<TD $style_cell_border>Approximate WM Masking Threshold</TD>
-												<TD $style_cell_border>Approximate CSF Masking Threshold</TD>
-											</TR>
-											#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue.imageFile").size() - 1)
-											#foreach($tisDataIndex in [0..$tmp])
-												#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageFile"))
-													<TR>
-														<TD $style_cell_border>
-															$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageFile").replaceAll(".*/","")
-														</TD>
-														<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType")</TD>
-														#if ($datatype == "NormCat12DTIData")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrtensor_MD")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "1.19" "0.91" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "0.86" "0.70" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "1.92" "1.28" $errorColor $style_cell_border)
-															#elseif ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrtensor_fa")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "0.19" "0.11" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "0.37" "0.29" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "0.17" "0.09" $errorColor $style_cell_border)
+							#set($tisDats = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData").size() - 1 )
+							<script type="text/javascript" LANGUAGE="JavaScript">
+								console.log("Number of tissue data entries: $tisDats")
+							 </script>
+							
+							## Set Tissue Report  
+							 <TR>
+									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Tissue Report</font></TH>
+							</TR>
+							
+							<TR>
+								<TD align="left" valign="top">
+									<TABLE $style_table_collapse>
+										#set($unit = "Mean")
+										<TR>
+											<TD $style_cell_border>Image file</TD>
+											<TD $style_cell_border>Image type</TD>
+											<TD $style_cell_border>Gray Matter $unit</TD>
+											<TD $style_cell_border>White Matter $unit</TD>
+											<TD $style_cell_border>CSF Matter $unit</TD>
+											<TD $style_cell_border>Approximate GM Masking Threshold</TD>
+											<TD $style_cell_border>Approximate WM Masking Threshold</TD>
+											<TD $style_cell_border>Approximate CSF Masking Threshold</TD>
+										</TR>
+	
+										#foreach($tisDat in [0..$tisDats])
+											#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue.imageFile").size() - 1)
+											#if ($tmp > 0)
+												#set( $name = "${elementName}.qcSession[$qcSessionIndex].tisData")
+												#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue.imageFile").size() - 1)
+												#foreach($tisDataIndex in [0..$tmp])
+													#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageFile"))
+														<TR>
+															<TD $style_cell_border>
+																$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageFile").replaceAll("/.*\//","")
+															</TD>
+															<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageType")</TD>
+															#if ($datatype == "NormCat12DTIData")
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+															#elseif ($datatype == "NormCat12DKIData")
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+															#elseif ($datatype == "NormCat12DKEData")
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+															#elseif ($datatype == "NormCat12PASLData")
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+															#elseif ($datatype == "NormCat12PCASLData")
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+															#elseif ($datatype == "NormCat12PCASL8Data")
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
 															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
 															#end
-														#elseif ($datatype == "NormCat12DKIData")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrtensor_MD")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "0.81" "0.57" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "0.63" "0.47" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "1.08" "0.55" $errorColor $style_cell_border)
-															#elseif ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrtensor_fa")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "0.22" "0.14" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "0.44" "0.33" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "0.23" "0.13" $errorColor $style_cell_border)
-															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-															#end
-														#elseif ($datatype == "NormCat12DKEData")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrdmean")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "1.75" "1.08" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "1.27" "0.94" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "2.67" "1.54" $errorColor $style_cell_border)
-															#elseif ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrfa")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "0.20" "0.08" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "0.35" "0.24" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "0.18" "0.06" $errorColor $style_cell_border)
-															#elseif ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wrkmean")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "0.81" "0.61" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "1.02" "0.78" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "0.68" "0.46" $errorColor $style_cell_border)
-															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-															#end
-														#elseif ($datatype == "NormCat12PASLData")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wpaslFilter_CBF")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "54.29" "11.77" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "40.83" "10.67" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "44.14" "6.78" $errorColor $style_cell_border)
-															#elseif ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wpaslFilter_qpCBF")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "53.25" "11.49" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "34.64" "9.32" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "49.39" "7.39" $errorColor $style_cell_border)
-															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-															#end
-														#elseif ($datatype == "NormCat12PCASLData")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wCBF")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "101.59" "5.63" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr  "64.81" "0.41" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr  "81.51" "1.71" $errorColor $style_cell_border)
-															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-															#end
-														#elseif ($datatype == "NormCat12PCASL8Data")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].imageType") == "wCBF8ph")
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "84.15" "24.36" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "45.26" "18.43" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "75.75" "17.48" $errorColor $style_cell_border)
-															#else
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm"  $item "" $vr "84.15" "24.36" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm"  $item "" $vr "45.26" "18.43" $errorColor $style_cell_border)
-																##highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr "75.75" "17.48" $errorColor $style_cell_border)
-																##<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																##<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																##<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-															#end
-														#else
-															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-														#end
-														<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].gmThresh")</TD>
-														<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].wmThresh")</TD>
-														<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].tissue[$tisDataIndex].csfThresh")</TD>
-													</TR>
-												#end
-											#end
-											<TR>
-												<TD colspan="16"><hr></TD>
-											</TR>
-											<TR>
-												<TD $style_cell_border colspan="2">Tissue CSV File</TD>
-												<TD $style_cell_border colspan="14">$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].file")</TD>
-											</TR>
-											<TR>
-												<TD $style_cell_border colspan="2">Tissue File Timestamp</TD>
-												<TD $style_cell_border colspan="14">
-													##highlightDifferentDate( "${elementName}.qcSession" $qcSessionIndex ".tisData[0].filedate" $item $vr $years $errorColor)
-													##highlightDifferentTime( "${elementName}.qcSession" $qcSessionIndex ".tisData[0].filetime" $item $errorColor)
-												</TD>
-											</TR>
-											<TR>
-												<TD $style_cell_border colspan="2">Quality</TD>
-												<TD $style_cell_border colspan="14">
-													#if($qcSessionIndex == $numOfQCSessions)
-														$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].quality")
-													#else
-														$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[0].quality")
+															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
+															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
+															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
+														</TR>
 													#end
-												</TD>
-											</TR>
-										</TABLE>
-									</TD>
-								</TR>
-								#end
-	<!-- END ${elementName}.qcSession[$qcSessionIndex].tisData.tissue -->
-
-	<!-- BEGIN ${elementName}.qcSession[$qcSessionIndex].wbData.whlBrn -->
-							#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn.imageFile").size() - 1)
-							#if ($tmp > 0)
-								<TR>
-									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Whole Brain Report:</font></TH>
-								</TR>
-								<TR>
-									<TD align="left" valign="top">
-										## THERE SHOULD ONLY BE ONE wbData
-										#xdatHiddenBox("${elementName}.qcSession[$qcSessionIndex].wbData[0].${namespace}_${datatype}_qcSession_whlBrn_id" $item "")
-										<TABLE $style_table_collapse>
-											<TR>
-												<TD $style_cell_border>Image file</TD>
-												<TD $style_cell_border>Image type</TD>
-												<TD $style_cell_border>Whole Brain Measurement</TD>
-												<TD style="visibility: collapse;"><!-- Empty;  Used for a xdataHiddenBox--></TD>
-											</TR>
-											#foreach($tisDataIndex in [0..$tmp])
-												#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].imageFile"))
-													<TR>
-														<TD $style_cell_border>
-															## So File path doesn't show in the file name
-															#xdatHiddenBox("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].imageFile" $item "")
-															$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].imageFile").replaceAll(".*/","")
-														</TD>
-														<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].imageType" $item "" $vr)</TD>
-														#if ($datatype == "NormCat12LST8Data")
-															#if     ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].imageType") == "LST 0.35")
-																###highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].wb"  $item "" $vr "29.35" "0.00" $errorColor $style_cell_border)
-															#elseif ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].imageType") == "LST 0.25")
-																###highlightGreaterThanLessThanCell("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].wb"  $item "" $vr "31.89" "0.00" $errorColor $style_cell_border)
-															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].wb" $item "" $vr)</TD>
-															#end
-														#else
-															<TD $style_cell_border>##riiplShowString("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].wb" $item "" $vr)</TD>
-														#end
-														<TD  style="visibility: collapse;">
-															## this cell is a little different, so as to have the riiplqa_${elementName}_qcSession_tissue_id item
-															#xdatHiddenBox("${elementName}.qcSession[$qcSessionIndex].wbData[0].whlBrn[$tisDataIndex].${namespace}_${datatype}_qcSession_wbData_tissue_id" $item "")
-														</TD>
-													</TR>
 												#end
 											#end
-											<TR>
-												<TD colspan="3"><hr></TD>
-											</TR>
-											<TR>
-												<TD $style_cell_border colspan="2">Tissue CSV File</TD>
-												<TD $style_cell_border colspan="1">#riiplShowString("${elementName}.qcSession[$qcSessionIndex].wbData.file" $item "" $vr)</TD>
-											</TR>
-											<TR>
-												<TD $style_cell_border colspan="2">Tissue File Timestamp</TD>
-												<TD $style_cell_border colspan="1">
-													###highlightDifferentDate( "${elementName}.qcSession" $qcSessionIndex ".wbData[0].filedate" $item $vr $years $errorColor)
-													###highlightDifferentTime( "${elementName}.qcSession" $qcSessionIndex ".wbData[0].filetime" $item $errorColor)
-												</TD>
-											</TR>
-											<TR>
-												<TD $style_cell_border colspan="2">Quality</TD>
-												<TD $style_cell_border colspan="1">
-													#riiplShowString("${elementName}.qcSession[$qcSessionIndex].wbData.quality" $item $status $vr)
-													#xdatHiddenBox("${elementName}.qcSession[$qcSessionIndex].wbData.parameter" $item "")
-												</TD>
-											</TR>
-										</TABLE>
-									</TD>
-								</TR>
-								#end
+										#end
+								</TABLE></TD>
+							</TR>
+							<TR>
+								<TD colspan="16"><hr></TD>
+							</TR>
+								
 	<!-- END ${elementName}.qcSession[$qcSessionIndex].tisData.tissue -->
-
-
 
 	<!--motion paramters-->
 	#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].mvmtFile"))
@@ -725,25 +578,25 @@
 												<TD $style_cell_border width="16%">Yaw</TD>
 											</TR>
 											<TR>
-												###highlightGreaterThanCell("${elementName}.qcSession[$qcSessionIndex].mvmtMaxX" $item "" $vr "2" $errorColor $style_cell_border)
-												###highlightGreaterThanCell("${elementName}.qcSession[$qcSessionIndex].mvmtMaxY" $item "" $vr "2" $errorColor $style_cell_border)
-												###highlightGreaterThanCell("${elementName}.qcSession[$qcSessionIndex].mvmtMaxZ" $item "" $vr "2" $errorColor $style_cell_border)
-												###highlightGreaterThanCell("${elementName}.qcSession[$qcSessionIndex].mvmtMaxPitch" $item "" $vr "1.5" $errorColor $style_cell_border)
-												###highlightGreaterThanCell("${elementName}.qcSession[$qcSessionIndex].mvmtMaxRoll" $item "" $vr "1.5" $errorColor $style_cell_border)
-												###highlightGreaterThanCell("${elementName}.qcSession[$qcSessionIndex].mvmtMaxYaw" $item "" $vr "1.5" $errorColor $style_cell_border)
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxX" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxY" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxZ" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxPitch" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxRoll" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxYaw" $item "" $vr)</TD>
 											</TR>
 											<TR>
 												<TD colspan="6"><hr></TD>
 											</TR>
 											<TR>
-												<TD $style_cell_border colspan="2">RP File</TD>
+												<TD $style_cell_border colspan="2">SPM12 MC output (RP file)</TD>
 												<TD $style_cell_border colspan="4">#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtFile" $item "" $vr)</TD>
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">RP File Timestamp</TD>
 												<TD $style_cell_border colspan="4">
-													###highlightDifferentDate( "${elementName}.qcSession" $qcSessionIndex ".mvmtDate" $item $vr $years $errorColor)
-													###highlightDifferentTime( "${elementName}.qcSession" $qcSessionIndex ".mvmtTime" $item $errorColor)
+													#riiplShowDate("${elementName}.qcSession[$qcSessionIndex].date" $item $vr $years)
+													#riiplShowTime("${elementName}.qcSession[$qcSessionIndex].time" $item $vr $years)
 												</TD>
 											</TR>
 											<TR>
@@ -804,6 +657,8 @@
 						</TD>
 					</TR>
 				</TABLE>
+			</TD>
+			<TD>
 			</TD>
 		</TR>
 <!-- END ${elementName} -->

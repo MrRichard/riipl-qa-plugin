@@ -236,7 +236,7 @@ $page.setVlinkColor($ui.vlink)
 			<table width="100%">
 				<TR>
 					<TD align="left" valign="middle">
-						<font face="$ui.sansSerifFonts" size="3"><b>SegCat12 Details</b></font>
+						<font face="$ui.sansSerifFonts" size="3"><b>CAT12 Segmentation Details</b></font>
 					</TD>
 				</TR>
 			</TABLE>
@@ -260,7 +260,7 @@ $page.setVlinkColor($ui.vlink)
 								#parse("/screens/xnat_edit_experimentData.vm")
 								<HR></TD></TR>
 							<tr>
-								<th align="left">SegCat12 ID</th>
+								<th align="left">QC Report ID</th>
 								<TD align="left">#xdatStringBox("riiplqa:SegCat12Data.ID" $item "" $vr)</TD>
 							</tr>
 							<tr>
@@ -281,9 +281,7 @@ $page.setVlinkColor($ui.vlink)
 	#set ($project = $!item.getProperty("riiplqa:SegCat12Data/project"))
 	#set ($subject = $!item.getProperty("riiplqa:SegCat12Data/subject"))
 	#set ($qc_id  = $!item.getProperty("riiplqa:SegCat12Data/imageSession_ID"))
-
 	#set ($numOfQCSessions = $item.getChildItems("riiplqa:SegCat12Data/qcSession").size() - 1)
-	
 	#foreach($riipl_SegCat12Data_qcSession_8_COUNTER in [0..$numOfQCSessions])
 		#set($numOfImageData = -1)
 		#set($tmp = $item.getChildItems("riiplqa:SegCat12Data/qcSession[$riipl_SegCat12Data_qcSession_8_COUNTER]/imgData/file").size() - 1)
@@ -531,5 +529,4 @@ $page.setVlinkColor($ui.vlink)
 		</TD>
 	</TR>
 </TABLE>
-
 <BR>#parse("/screens/ReportProjectSpecificFields.vm")

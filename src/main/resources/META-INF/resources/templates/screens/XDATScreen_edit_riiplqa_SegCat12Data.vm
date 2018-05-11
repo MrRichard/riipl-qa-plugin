@@ -225,7 +225,7 @@ $page.setVlinkColor($ui.vlink)
 			<TABLE width="100%">
 				<TR>
 					<TD align="left" valign="middle">
-						<DIV class="edit_title">SegCAT12 Details</DIV>
+						<DIV class="edit_title">EDIT Cat12 Segmentation Details</DIV>
 					</TD>
 				</TR>
 			</TABLE>

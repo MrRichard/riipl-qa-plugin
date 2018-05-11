@@ -121,6 +121,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.velocity/velocity-tools
 	compile group: 'org.apache.velocity', name: 'velocity-tools', version: '2.0'
 	
+	// https://mvnrepository.com/artifact/velocity-tools/velocity-tools-view
+	compile group: 'velocity-tools', name: 'velocity-tools-view', version: '1.4'
+	
+	
 	// https://mvnrepository.com/artifact/net.imagej/ij
 	compile group: 'net.imagej', name: 'ij', version: '1.49j'
 	
