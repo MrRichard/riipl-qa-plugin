@@ -438,7 +438,7 @@
 												<TR>
 													#set ($nTxt = $imgDataIndex + 1)
 													<TD $style_cell_border>$nTxt</TD>
-													<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file")</TD>
+													<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file").replaceAll(".*\/","")</TD>
 													<TD $style_cell_border>
 														###highlightDifferentTime( "${elementName}.qcSession" $qcSessionIndex ".imgData[$imgDataIndex].time" $item $errorColor)
 														#riiplShowDate("${elementName}.qcSession[$qcSessionIndex].date" $item $vr $years)
@@ -496,7 +496,7 @@
 													#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageFile"))
 														<TR>
 															<TD $style_cell_border>
-																$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageFile").replaceAll("/.*\//","")
+																$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageFile").replaceAll(".*\/","")
 															</TD>
 															<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageType")</TD>
 															#if ($datatype == "NormCat12DTIData")
@@ -514,15 +514,15 @@
 															#elseif ($datatype == "NormCat12PASLData")
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>-</TD>
 															#elseif ($datatype == "NormCat12PCASLData")
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>-</TD>
 															#elseif ($datatype == "NormCat12PCASL8Data")
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>-</TD>
 															#else
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
 																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
@@ -554,9 +554,7 @@
 										<TABLE>
 											<TR>
 												<TD>
-													<a href="$content.getURI("/REST/projects/")$!item.getProperty("${elementName}/project")/subjects/$!item.getProperty("${elementName}/subject")/experiments/$!item.getProperty("${elementName}/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession[$qcSessionIndex]/mvmtImage")">
-														<img height="610px" width="500px" src="$content.getURI("/REST/projects/")$!item.getProperty("${elementName}/project")/subjects/$!item.getProperty("${elementName}/subject")/experiments/$!item.getProperty("${elementName}/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession[$qcSessionIndex]/mvmtImage")">
-													</a>
+													<img height="610px" width="500px" src="$content.getURI("/REST/")/experiments/$!item.getProperty("${elementName}/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession[$qcSessionIndex]/mvmtImage")">
 													#xdatHiddenBox("${elementName}.qcSession[$qcSessionIndex].mvmtImage" $item "")
 												</TD>
 											</TR>
@@ -590,7 +588,7 @@
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">SPM12 MC output (RP file)</TD>
-												<TD $style_cell_border colspan="4">#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtFile" $item "" $vr)</TD>
+												<TD $style_cell_border colspan="4">#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtFile" $item "" $vr).replaceAll(".*\/","")</TD>
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">RP File Timestamp</TD>

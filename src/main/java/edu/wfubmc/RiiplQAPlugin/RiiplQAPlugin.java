@@ -15,7 +15,7 @@ import org.nrg.framework.annotations.XnatDataModel;
  */
 @XnatPlugin(
 	value = "riipl-qa-plugin",
-	name = "RIIPL XNAT QA Plugin Ver 0.0.3",
+	name = "RIIPL XNAT QA Plugin Ver 0.0.4",
 	description = "Plugin for RIIPL Pipeline-specific QA",
 	dataModels = {
 			@XnatDataModel(
