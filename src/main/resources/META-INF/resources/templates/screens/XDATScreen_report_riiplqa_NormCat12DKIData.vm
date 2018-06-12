@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
 $page.setTitle("NormCat12PCASL8 Details")
 $page.setLinkColor($ui.alink)
 $page.setVlinkColor($ui.vlink)
@@ -10,4 +9,6 @@ $page.setVlinkColor($ui.vlink)
 #set( $namespace = "riiplqa")
 #set( $datatype = "NormCat12DKIData")
 #set( $sequenceName = "DKI")
+#set( $elementName = "${namespace}:${datatype}")
+#set( $subject = $!item.getProperty("${elementName}/subject"))
 #parse("/screens/Cat12NormalizationReport.vm")

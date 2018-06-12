@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
-$page.setTitle("NormCat12PCASL8 Details")
+$page.setTitle("XDAT")
 $page.setLinkColor($ui.alink)
 $page.setVlinkColor($ui.vlink)
 #if ($data.getParameters().getString("popup"))
@@ -10,4 +9,6 @@ $page.setVlinkColor($ui.vlink)
 #set( $namespace = "riiplqa")
 #set( $datatype = "NormCat12NODDIData")
 #set( $sequenceName = "NODDI")
+#set( $elementName = "${namespace}:${datatype}")
+#set( $subject = $!item.getProperty("${elementName}/subject"))
 #parse("/screens/Cat12NormalizationReport.vm")

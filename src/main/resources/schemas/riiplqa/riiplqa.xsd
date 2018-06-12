@@ -20,7 +20,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -71,7 +71,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -137,7 +137,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -203,7 +203,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -269,7 +269,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -335,7 +335,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -390,7 +390,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
@@ -445,7 +445,7 @@
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
 					<xs:element name="subject" type="xs:string" minOccurs="0"/>
-					<xs:element name="qcSession" minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
 								<xs:element name="imgData" minOccurs="0" maxOccurs="unbounded">
