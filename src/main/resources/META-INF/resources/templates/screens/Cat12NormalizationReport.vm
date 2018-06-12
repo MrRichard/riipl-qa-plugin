@@ -258,180 +258,174 @@
 		</TD>
 	</TR>
 
-<!-- BEGIN ${elementName} -->
+	<!-- BEGIN ${elementName} -->
 	#set ($project = $!item.getProperty("${elementName}/project"))
 	#set ($subject = $!item.getProperty("${elementName}/subject"))
 	#set ($qc_id  = $!item.getProperty("${elementName}/imageSession_ID"))
-	##set ($numOfQCSessions = $item.getChildItems("${elementName}.qcSession").size() - 1)
-	#set ($numOfQCSessions = 0)
-	#foreach($qcSessionIndex in [0..$numOfQCSessions])
-		#set($numOfImageData = -1)
-		#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].imgData.file").size() - 1)
-		#foreach($tmpLoop in [ 0.. $tmp])
-			#if($item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$tmpLoop].file"))
-				#set($numOfImageData = $numOfImageData + 1)
-			#end
+
+	#set($numOfImageData = -1)
+	#set($tmp = $item.getChildItems("${elementName}.qcSession.imgData.file").size() - 1)	
+	#foreach($tmpLoop in [ 0.. $tmp])
+		#if($item.getProperty("${elementName}.qcSession.imgData[$tmpLoop].file"))
+			#set($numOfImageData = $numOfImageData + 1)
 		#end
-		<TR>
-			<TD>
-				<TABLE>
-					<TR>
-						<TD align="left" valign="top">
-							<TABLE>
-								<TR>
-									<TD>
-										<HR>
-										<HR>
-									</TD>
-								</TR>
-	<!-- BEGIN ${elementName}.qcSession[$qcSessionIndex] -->
-								<TR>
-									<TD>
+	#end
+	<TR>
+		<TD>
+			<TABLE>
+				<TR>
+					<TD align="left" valign="top">
+						<TABLE>
+							<TR>
+								<TD>
+									<HR>
+									<HR>
+								</TD>
+							</TR>
+<!-- BEGIN ${elementName}.qcSession -->
+							<TR>
+								<TD>
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===--- STATIC IMAGE  ---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
-										#if ($!item.getProperty("$!{elementName}/qcSession[$qcSessionIndex]/qcImage"))
-										
-											## debug
-											#set( $qcID = $!item.getProperty("$!{elementName}/qcSession[$qcSessionIndex]/id")) 
-											<script type="text/javascript">console.log("QC Session index is: $qcID")</script>
-											#set($qcImageHeight = $numOfImageData * 100)
-											<TABLE>
-												<TR>
-													<TD>
-													<div style="width:600px;overflow:scroll">
-															<a href="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession[$qcSessionIndex]/qcImage")">
-																<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession[$qcSessionIndex]/qcImage")">
-															</a>
-														</div>
-													</TD>
-												</TR>
-											</TABLE>
-										#else
+								#if ($!item.getProperty("$!{elementName}/qcSession/qcImage"))
+									#set($qcImageHeight = $numOfImageData * 100)
+									<TABLE>
+										<TR>
+											<TD>
+											<div style="width:600px;overflow:scroll">
+													<a href="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}.qcSession.qcImage")">
+														<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}.qcSession.qcImage")">
+													</a>
+												</div>
+											</TD>
+										</TR>
+									</TABLE>
+								#else
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===--- XTK ADDITION  ---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
-											<TABLE $style_table_collapse>
-												<TR>
-													#set ($mainSlice = "")
-													#foreach($imgDataIndex in [0..$numOfImageData])
-														#set ($fn = $item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file"))
-														#set ($li = $fn.lastIndexOf("/") + 1 )
-														#set ($fn = $fn.substring($li))
-														
-														#if ($fn == "")
-															<script type="text/javascript">alert('Missing Image File')</script>
-														#end
-														
-														#set ($niiDate = $turbineUtils.formatDate($item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date"),'yyyyMMdd'))
-														#set ($niiTime = $item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].time").toString().replace(':',''))
-														#if ($niiTime == "000000")
-															##fallback, hopefully one will work
-															#set ($niiTime = $turbineUtils.formatDate($item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date"),'HHmmss'))
-														#end
-														#if ($niiTime.length() == 0)
-															##fallback, hopefully one will work
-															#set ($niiTime = $turbineUtils.formatDate($item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date"),'HHmmss'))
-														#end
-														#set ($idBase = "nii_${qcSessionIndex}_${imgDataIndex}")
-															<TD $style_cell_border>
-															 <div id="$idBase" style="background-color: #000; width: 175px; height: 175px;" />
-																<script type="text/javascript">
-																	
-																	var slice_${idBase} = null;
-																	var volume_${idBase} = null;
-																	addLoadEvent(function () {
-																		console.log("${subject} - ${qc_id} - ${fn}")
-																		#if ($datatype == "SegCat12Data")
-																			#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${fn}") )
-																		#else
-																			#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${datatype}/${fn}") )
-																		#end
-
-																		##Special case names for image overlays
-																		##for LST8
-																		#if ($imgDataIndex == 1)
-																			#set ($flair  = $urlFile)
-																		#end
-
-																		#newVolumeAnd2DSlice( "volume_${idBase}" "slice_${idBase}" $urlFile $idBase)
+									<TABLE $style_table_collapse>
+										<TR>
+											#set ($mainSlice = "")
+											#foreach($imgDataIndex in [0..$numOfImageData])
+												#set ($fn = $item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].file"))
+												#set ($li = $fn.lastIndexOf("/") + 1 )
+												#set ($fn = $fn.substring($li))
 												
-																		#if ($mainSlice == "")
-																			#set ($mainSlice = "slice_${idBase}")
-																		#else
-																			slice_${idBase}.camera.view=${mainSlice}.camera.view;
-																		#end
+												#if ($fn == "")
+													<script type="text/javascript">alert('Missing Image File')</script>
+												#end
 												
-																		slice_${idBase}.interactor.onMouseWheel = function(right) { syncTo$idBase(); };
+												#set ($niiDate = $turbineUtils.formatDate($item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].date"),'yyyyMMdd'))
+												#set ($niiTime = $item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].time").toString().replace(':',''))
+												#if ($niiTime == "000000")
+													##fallback, hopefully one will work
+													#set ($niiTime = $turbineUtils.formatDate($item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].date"),'HHmmss'))
+												#end
+												#if ($niiTime.length() == 0)
+													##fallback, hopefully one will work
+													#set ($niiTime = $turbineUtils.formatDate($item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].date"),'HHmmss'))
+												#end
+												#set ($idBase = "nii_1_${imgDataIndex}")
+													<TD $style_cell_border>
+													 <div id="$idBase" style="background-color: #000; width: 175px; height: 175px;" />
+														<script type="text/javascript">
 															
-																	});
-																	function syncTo$idBase() {
-																		#foreach($indx in [0..$numOfImageData])
-																			#if ($indx != $imgDataIndex)
-																				volume_nii_${qcSessionIndex}_${indx}.indexX=volume_${idBase}.indexX;
-																				volume_nii_${qcSessionIndex}_${indx}.indexY=volume_${idBase}.indexY;
-																				volume_nii_${qcSessionIndex}_${indx}.indexZ=volume_${idBase}.indexZ;
-																				volume_nii_${qcSessionIndex}_${indx}.modified();
-																			#end
-																		#end
-																	}
-															</script>
-														</TD>
-													#end
-													#if ($datatype == "NormCat12PCASL8Data")
-														<TD>
-														<img src="$content.getURI('images/colorbar.png')" />
-														</TD>
-													#end
-												</TR>
-												<TR>
-													#foreach($imgDataIndex in [0..$numOfImageData])
-														#set ($nTxt = $imgDataIndex + 1)
-														<TD style="text-align: center;">$nTxt</TD>
-													#end
-												</TR>
-											</TABLE>
-											<script type="text/javascript">
-												function setSagittal_${qcSessionIndex}() {
-													var orient='X';
-													#foreach($indx in [0..$numOfImageData])
-														slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
-														volume_nii_${qcSessionIndex}_${indx}.modified();
-														slice_nii_${qcSessionIndex}_${indx}.render();
-													#end
-													return false;
-												}
-												function setCoronal_${qcSessionIndex}() {
-													var orient='Y';
-													#foreach($indx in [0..$numOfImageData])
-														slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
-														volume_nii_${qcSessionIndex}_${indx}.modified();
-														slice_nii_${qcSessionIndex}_${indx}.render();
-													#end
-													return false;
-												}
-												function setAxial_${qcSessionIndex}() {
-													var orient='Z';
-													#foreach($indx in [0..$numOfImageData])
-														slice_nii_${qcSessionIndex}_${indx}.orientation = orient;
-														volume_nii_${qcSessionIndex}_${indx}.modified();
-														slice_nii_${qcSessionIndex}_${indx}.render();
-													#end
-													return false;
-												}
-											</script>
-											<input type="button" onClick="setSagittal_${qcSessionIndex}()" value="Set Sagittal" >
-											<input type="button" onClick="setCoronal_${qcSessionIndex}()" value="Set Coronal">
-											<input type="button" onClick="setAxial_${qcSessionIndex}()" value="Set Axial">
+															var slice_${idBase} = null;
+															var volume_${idBase} = null;
+															addLoadEvent(function () {
+																console.log("${subject} - ${qc_id} - ${fn}")
+																#if ($datatype == "SegCat12Data")
+																	#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${fn}") )
+																#else
+																	#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${datatype}/${fn}") )
+																#end
+
+																##Special case names for image overlays
+																##for LST8
+																#if ($imgDataIndex == 1)
+																	#set ($flair  = $urlFile)
+																#end
+
+																#newVolumeAnd2DSlice( "volume_${idBase}" "slice_${idBase}" $urlFile $idBase)
+										
+																#if ($mainSlice == "")
+																	#set ($mainSlice = "slice_${idBase}")
+																#else
+																	slice_${idBase}.camera.view=${mainSlice}.camera.view;
+																#end
+										
+																slice_${idBase}.interactor.onMouseWheel = function(right) { syncTo$idBase(); };
+													
+															});
+															function syncTo$idBase() {
+																#foreach($indx in [0..$numOfImageData])
+																	#if ($indx != $imgDataIndex)
+																		volume_nii_1_${indx}.indexX=volume_${idBase}.indexX;
+																		volume_nii_1_${indx}.indexY=volume_${idBase}.indexY;
+																		volume_nii_1_${indx}.indexZ=volume_${idBase}.indexZ;
+																		volume_nii_1_${indx}.modified();
+																	#end
+																#end
+															}
+													</script>
+												</TD>
+											#end
+											#if ($datatype == "NormCat12PCASL8Data")
+												<TD>
+												<img src="$content.getURI('images/colorbar.png')" />
+												</TD>
+											#end
+										</TR>
+										<TR>
+											#foreach($imgDataIndex in [0..$numOfImageData])
+												#set ($nTxt = $imgDataIndex + 1)
+												<TD style="text-align: center;">$nTxt</TD>
+											#end
+										</TR>
+									</TABLE>
+									<script type="text/javascript">
+										function setSagittal_1() {
+											var orient='X';
+											#foreach($indx in [0..$numOfImageData])
+												slice_nii_1_${indx}.orientation = orient;
+												volume_nii_1_${indx}.modified();
+												slice_nii_1_${indx}.render();
+											#end
+											return false;
+										}
+										function setCoronal_1() {
+											var orient='Y';
+											#foreach($indx in [0..$numOfImageData])
+												slice_nii_1_${indx}.orientation = orient;
+												volume_nii_1_${indx}.modified();
+												slice_nii_1_${indx}.render();
+											#end
+											return false;
+										}
+										function setAxial_1() {
+											var orient='Z';
+											#foreach($indx in [0..$numOfImageData])
+												slice_nii_1_${indx}.orientation = orient;
+												volume_nii_1_${indx}.modified();
+												slice_nii_1_${indx}.render();
+											#end
+											return false;
+										}
+									</script>
+									<input type="button" onClick="setSagittal_1()" value="Set Sagittal" >
+									<input type="button" onClick="setCoronal_1()" value="Set Coronal">
+									<input type="button" onClick="setAxial_1()" value="Set Axial">
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===--- XTK ADDITION END ===---===---===---===---===---===---===---===---===---
 ## ---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---===---
-										#end
+							#end
 
 									</TD>
 								</TR>
 
-<!-- BEGIN ${elementName}.qcSession[$qcSessionIndex].imgData -->
+<!-- BEGIN ${elementName}.qcSession.imgData -->
 								<TR>
 									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Image Quality (Images above are in the order of images below)</font></TH>
 								</TR>
@@ -448,16 +442,16 @@
 												<TR>
 													#set ($nTxt = $imgDataIndex + 1)
 													<TD $style_cell_border>$nTxt</TD>
-													<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].file").replaceAll(".*\/","")</TD>
+													<TD $style_cell_border>$item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].file").replaceAll(".*\/","")</TD>
 													<TD $style_cell_border>
-														#riiplShowDate("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].date" $item $vr $years)
-														#riiplShowString("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].time" $item $vr $vr)
+														#riiplShowDate("${elementName}.qcSession.imgData[$imgDataIndex].date" $item $vr $years)
+														#riiplShowString("${elementName}.qcSession.imgData[$imgDataIndex].time" $item $vr $vr)
 													</TD>
 													<TD $style_cell_border>
 														#if($qcSessionIndex == $numOfQCSessions)
-															$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].quality")
+															$item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].quality")
 														#else
-															$item.getProperty("${elementName}.qcSession[$qcSessionIndex].imgData[$imgDataIndex].quality")
+															$item.getProperty("${elementName}.qcSession.imgData[$imgDataIndex].quality")
 														#end
 													</TD>
 												</TR>
@@ -465,14 +459,14 @@
 										</TABLE>
 									</TD>
 								</TR>
-	<!-- END ${elementName}.qcSession[$qcSessionIndex].imgData -->
+	<!-- END ${elementName}.qcSession.imgData -->
 
 
 
 	<!-- Tissue Report <TABLE>-->
-	<!-- BEGIN ${elementName}.qcSession[$qcSessionIndex].tisData[$qcSessionIndex].tissue -->
+	<!-- BEGIN ${elementName}.qcSession.tisData.tissue -->
 						#if ($datatype != "SegCat12Data")
-							#set($tisDats = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData").size() - 1 )
+							#set($tisDats = $item.getChildItems("${elementName}.qcSession.tisData").size() - 1 )
 							<script type="text/javascript" LANGUAGE="JavaScript">
 								console.log("Number of tissue data entries: $tisDats")
 							 </script>
@@ -498,50 +492,50 @@
 										</TR>
 	
 										#foreach($tisDat in [0..$tisDats])
-											#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue.imageFile").size() - 1)
+											#set($tmp = $item.getChildItems("${elementName}.qcSession.tisData[$tisDat].tissue.imageFile").size() - 1)
 											#if ($tmp > 0)
-												#set( $name = "${elementName}.qcSession[$qcSessionIndex].tisData")
-												#set($tmp = $item.getChildItems("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue.imageFile").size() - 1)
+												#set( $name = "${elementName}.qcSession.tisData")
+												#set($tmp = $item.getChildItems("${elementName}.qcSession.tisData[$tisDat].tissue.imageFile").size() - 1)
 												#foreach($tisDataIndex in [0..$tmp])
-													#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm"))
+													#if ($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm"))
 														<TR>
 															<TD $style_cell_border>
-																$!item.getProperty("$!{elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageFile").replaceAll(".*\/","")
+																$!item.getProperty("$!{elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].imageFile").replaceAll(".*\/","")
 															</TD>
 															
-															<TD $style_cell_border>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].imageType")</TD>
+															<TD $style_cell_border>$item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].imageType")</TD>
 															#if ($datatype == "NormCat12DTIData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
 															#elseif ($datatype == "NormCat12DKIData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
 															#elseif ($datatype == "NormCat12DKEData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
 															#elseif ($datatype == "NormCat12PASLData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
 																<TD $style_cell_border>-</TD>
 															#elseif ($datatype == "NormCat12PCASLData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
 																<TD $style_cell_border>-</TD>
 															#elseif ($datatype == "NormCat12PCASL8Data")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
 																<TD $style_cell_border>-</TD>
 															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
+																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
 															#end
-															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
+															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
+															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
+															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
 														</TR>
 													#end
 												#end
@@ -553,12 +547,12 @@
 								<TD colspan="16"><hr></TD>
 							</TR>
 								
-	<!-- END ${elementName}.qcSession[$qcSessionIndex].tisData.tissue -->
+	<!-- END ${elementName}.qcSession.tisData.tissue -->
 						#end
 
 	<!--motion paramters-->
 	#if ($datatype != "SegCat12Data")
-		#if ($item.getProperty("${elementName}.qcSession[$qcSessionIndex].mvmtFile"))
+		#if ($!item.getProperty("${elementName}.qcSession.mvmtFile").length >= 1)
 								<TR>
 									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Motion Parameters</font></TH>
 								</TR>
@@ -567,8 +561,8 @@
 										<TABLE>
 											<TR>
 												<TD>
-													<img height="610px" width="500px" src="$content.getURI("/REST/projects/")$!item.getProperty("${elementName}/project")/subjects/$!item.getProperty("${elementName}/subject")/experiments/$!item.getProperty("${elementName}/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession[$qcSessionIndex]/mvmtImage")">
-													#xdatHiddenBox("${elementName}.qcSession[$qcSessionIndex].mvmtImage" $item "")
+													<img height="610px" width="500px" src="$content.getURI("/REST/projects/")$!item.getProperty("${elementName}/project")/subjects/$!item.getProperty("${elementName}/subject")/experiments/$!item.getProperty("${elementName}/imageSession_ID")/resources/QC_IMAGES/files/$!item.getProperty("${elementName}/qcSession/mvmtImage")">
+													#xdatHiddenBox("${elementName}.qcSession.mvmtImage" $item "")
 												</TD>
 											</TR>
 										</TABLE>
@@ -589,31 +583,31 @@
 												<TD $style_cell_border width="16%">Yaw</TD>
 											</TR>
 											<TR>
-												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxX" $item "" $vr)</TD>
-												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxY" $item "" $vr)</TD>
-												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxZ" $item "" $vr)</TD>
-												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxPitch" $item "" $vr)</TD>
-												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxRoll" $item "" $vr)</TD>
-												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtMaxYaw" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.mvmtMaxX" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.mvmtMaxY" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.mvmtMaxZ" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.mvmtMaxPitch" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.mvmtMaxRoll" $item "" $vr)</TD>
+												<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.mvmtMaxYaw" $item "" $vr)</TD>
 											</TR>
 											<TR>
 												<TD colspan="6"><hr></TD>
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">SPM12 MC output (RP file)</TD>
-												<TD $style_cell_border colspan="4">#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtFile" $item "" $vr).replaceAll(".*\/","")</TD>
+												<TD $style_cell_border colspan="4">#riiplShowString("${elementName}.qcSession.mvmtFile" $item "" $vr).replaceAll(".*\/","")</TD>
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">RP File Timestamp</TD>
 												<TD $style_cell_border colspan="4">
-													#riiplShowDate("${elementName}.qcSession[$qcSessionIndex].date" $item $vr $years)
-													#riiplShowTime("${elementName}.qcSession[$qcSessionIndex].time" $item $vr $years)
+													#riiplShowDate("${elementName}.qcSession.date" $item $vr $years)
+													#riiplShowTime("${elementName}.qcSession.time" $item $vr $years)
 												</TD>
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">Quality</TD>
 												<TD $style_cell_border colspan="14">
-													#riiplShowString("${elementName}.qcSession[$qcSessionIndex].mvmtQuality" $item "" $vr)
+													#riiplShowString("${elementName}.qcSession.mvmtQuality" $item "" $vr)
 												</TD>
 											</TR>
 										</TABLE>
@@ -623,37 +617,36 @@
 	#end
 	<!--final sign off-->
 
-
 								<TR>
 									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Sign-Off Information</font></TH>
 								</TR>
 								<TR>
 									<TD align="left" valign="top">
 										<TABLE>
-											<TR><TD>Assesor</TD><TD>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].username")</TD></TR>
+											<TR><TD>Assesor</TD><TD>$item.getProperty("${elementName}.qcSession.username")</TD></TR>
 											<TR>
 												<TD>Assesment Date</TD>
 												<TD>
-													#riiplShowDate("${elementName}.qcSession[$qcSessionIndex].date" $item $vr $years)
-													$item.getProperty("${elementName}.qcSession[$qcSessionIndex].time")
+													#riiplShowDate("${elementName}.qcSession.date" $item $vr $years)
+													$item.getProperty("${elementName}.qcSession.time")
 												</TD>
 											</TR>
 											#if($qcSessionIndex == $numOfQCSessions)
-												<TR><TD>Final Quality</TD><TD>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].quality")</TD></TR>
+												<TR><TD>Final Quality</TD><TD>$item.getProperty("${elementName}.qcSession.quality")</TD></TR>
 												<TR>
 													<TD>Comments</TD>
 													<TD>
 														<!--a little long so as to have the riiplqa_Cat12NewSegData_qcSession_id here -->
-														$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].comments")
+														$!item.getProperty("${elementName}.qcSession.comments")
 													</TD>
 												</TR>
 											#else
-												<TR><TD>Final Quality</TD><TD>$item.getProperty("${elementName}.qcSession[$qcSessionIndex].quality")</TD></TR>
+												<TR><TD>Final Quality</TD><TD>$item.getProperty("${elementName}.qcSession.quality")</TD></TR>
 												<TR>
 													<TD>Comments</TD>
 													<TD>
 														<!--a little long so as to have the riiplqa_Cat12NewSegData_qcSession_id here -->
-														$!item.getProperty("${elementName}.qcSession[$qcSessionIndex].comments")
+														$!item.getProperty("${elementName}.qcSession.comments")
 													</TD>
 												</TR>
 											#end
@@ -662,7 +655,7 @@
 								</TR>
 
 							</TABLE>
-	<!-- END ${elementName}.qcSession[$qcSessionIndex] -->
+	<!-- END ${elementName}.qcSession -->
 						</TD>
 						<TD valign="top" align="right">
 							#elementActionsBox($element $search_field $search_value $data.getSession().getAttribute("user") $item)
@@ -674,8 +667,6 @@
 			</TD>
 		</TR>
 <!-- END ${elementName} -->
-	#end
 </TABLE>
-
 </p>
 </form>
