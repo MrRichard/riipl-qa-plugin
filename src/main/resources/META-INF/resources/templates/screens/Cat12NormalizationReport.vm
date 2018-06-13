@@ -552,7 +552,7 @@
 
 	<!--motion paramters-->
 	#if ($datatype != "SegCat12Data")
-		#if ($!item.getProperty("${elementName}.qcSession.mvmtFile").length >= 1)
+		#if ($!item.getProperty("${elementName}.qcSession.mvmtFile"))
 								<TR>
 									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Motion Parameters</font></TH>
 								</TR>

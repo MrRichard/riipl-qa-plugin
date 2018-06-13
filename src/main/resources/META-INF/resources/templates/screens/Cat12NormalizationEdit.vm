@@ -442,11 +442,7 @@
 												<TD $style_cell_border>Quality</TD>
 											</TR>
 											#foreach($imgDataIndex in [0..$numOfImageData])
-											
-												## save the form variables!
 												#xdatHiddenBox("${elementName}.qcSession.imgData[$imgDataIndex].file" $item "")
-												#xdatHiddenBox("${elementName}.qcSession.imgData[$imgDataIndex].${namespace}_${datatype}_qcSession_imgData_id" $item "")
-											
 												<TR>
 													#set ($nTxt = $imgDataIndex + 1)
 													<TD $style_cell_border>$nTxt</TD>
@@ -463,6 +459,8 @@
 														#end
 													</TD>
 												</TR>
+												## create imageDataID number
+												#xdatHiddenBox("${elementName}.qcSession.imgData[$imgDataIndex].${namespace}_${datatype}_imgData_id" $item "")
 											#end
 										</TABLE>
 									</TD>
@@ -494,11 +492,11 @@
 										#foreach($tisDat in [0..$tisDats])
 										
 											## set those form variables!
-											#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].${namespace}_${datatype}_qcSession_tisData_id" $item "")
 											#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].file" $item "")
 											#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].filedate" $item "")
 											#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].filetime" $item "")
 											#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].quality" $item "")
+											#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].${namespace}_${datatype}_tisData_id" $item "")
 										
 											#set($tmp = $item.getChildItems("${elementName}.qcSession.tisData[$tisDat].tissue.imageFile").size() - 1)
 											#if ($tmp > 0)
@@ -547,6 +545,7 @@
 															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
 															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
 															<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
+															#xdatHiddenBox("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].${namespace}_${datatype}_tisData_tissue_id" $item "")
 														</TR>
 													#end
 												#end
@@ -647,28 +646,15 @@
 											</TR>
 											#if($qcSessionIndex == $numOfQCSessions)
 												<TR><TD>Final Quality</TD><TD>#riiplSimpleSelectBox("${elementName}.qcSession.quality" $item $status $vr)</TD></TR>
-												<TR>
-													<TD>Comments</TD>
-													<TD>
-														<!--a little long so as to have the riipl_${datatype}_qcSession_id here -->
-														#xdatStringBox("${elementName}.qcSession.comments" $item "" $vr)
-													</TD>
-												</TR>
+												<TR><TD>Comments</TD><TD>#xdatStringBox("${elementName}.qcSession.comments" $item "" $vr)</TD></TR>
 											#else
 												<TR><TD>Final Quality</TD><TD>#riiplShowString("${elementName}.qcSession.quality" $item $finalStatus $vr)</TD></TR>
-												<TR>
-													<TD>Comments</TD>
-													<TD>
-														<!--a little long so as to have the riipl_${datatype}_qcSession_id here -->
-														#riiplShowString("${elementName}.qcSession.comments" $item "" $vr)
-														#xdatHiddenBox("${elementName}/qcSession/${namespace}_${datatype}_qcSession_id" $item "")
-													</TD>
-												</TR>
+												<TR><TD>Comments</TD><TD>#riiplShowString("${elementName}.qcSession.comments" $item "" $vr)</TD></TR>
 											#end
 										</TABLE>
 									</TD>
 								</TR>
-
+								
 							</TABLE>
 	<!-- END ${elementName}.qcSession -->
 						</TD>
@@ -681,9 +667,10 @@
 	<TR>
 		<TD>
 			#xdatEditProps($item $edit_screen)
+			##xdatHiddenBox("${elementName}/qcSession/${namespace}_${datatype}_qcSession_id" $item "")
 			<TR>
 				<TD COLSPAN=2 ALIGN=left>
-					<input type="button" ONCLICK="validateForm();"  name="eventSubmit_doUpdate" value="Submit"/>
+					<input type="button" ONCLICK="validateForm();"  name="eventSubmit_doInsert" value="Submit"/>
 				</TD>
 			</TR>
 		</TD>
