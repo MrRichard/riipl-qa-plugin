@@ -551,7 +551,7 @@
 						#end
 
 	<!--motion paramters-->
-	#if ($datatype != "SegCat12Data")
+	#if ($datatype == "NormCat12PCASLData" || $datatype == "NormCat12PCASL8Data") 
 		#if ($!item.getProperty("${elementName}.qcSession.mvmtFile"))
 								<TR>
 									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Motion Parameters</font></TH>
