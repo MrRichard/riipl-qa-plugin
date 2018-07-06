@@ -3,11 +3,9 @@
 #set($finalStatus				= ["unread", "good", "acceptable", "bad", "structural anomaly","followup"])
 #set($style_table_collapse		= 'style="border-collapse:collapse;"')
 #set($style_cell_border			= 'style="border: 1px solid #ccc;"')
-##set($elementName				= "${namespace}:${datatype}")
 #set($errorColor				= "#FF9999" )
 #set($fullname					= "$user.Firstname $user.Lastname")
 #set($project					= $!item.getProperty("${elementName}/project"))
-##set($subject					= $!item.getProperty("${elementName}/subject"))
 #set($qc_id						= $!item.getProperty("${elementName}/imageSession_ID"))
 
 #macro ( includeXtk )
@@ -260,7 +258,7 @@
 
 	<!-- BEGIN ${elementName} -->
 	#set ($project = $!item.getProperty("${elementName}/project"))
-	#set ($subject = $!item.getProperty("${elementName}/subject"))
+	#set ($subject_id = $!item.getProperty("${elementName}/subject"))
 	#set ($qc_id  = $!item.getProperty("${elementName}/imageSession_ID"))
 
 	#set($numOfImageData = -1)
@@ -294,8 +292,8 @@
 										<TR>
 											<TD>
 											<div style="width:600px;overflow:scroll">
-													<a href="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}.qcSession.qcImage")">
-														<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$project/subjects/$subject/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}.qcSession.qcImage")">
+													<a href="$content.getURI("/REST/projects/")$project/subjects/$subject_id/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}.qcSession.qcImage")">
+														<img height="$qcImageHeight" src="$content.getURI("/REST/projects/")$project/subjects/$subject_id/experiments/$qc_id/resources/QC_IMAGES/files/$!item.getProperty("${elementName}.qcSession.qcImage")">
 													</a>
 												</div>
 											</TD>
@@ -335,11 +333,11 @@
 															var slice_${idBase} = null;
 															var volume_${idBase} = null;
 															addLoadEvent(function () {
-																console.log("${subject} - ${qc_id} - ${fn}")
+
 																#if ($datatype == "SegCat12Data")
-																	#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${fn}") )
+																	#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject_id}/experiments/${qc_id}/resources/QC_IMAGES/files/${fn}") )
 																#else
-																	#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject}/experiments/${qc_id}/resources/QC_IMAGES/files/${datatype}/${fn}") )
+																	#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject_id}/experiments/${qc_id}/resources/QC_IMAGES/files/${datatype}/${fn}") )
 																#end
 
 																##Special case names for image overlays
@@ -372,7 +370,7 @@
 													</script>
 												</TD>
 											#end
-											#if ($datatype == "NormCat12PCASL8Data")
+											#if ($datatype == "NormCat12PCASL8Data" || $datatype == "NormCat12PCASLData")
 												<TD>
 												<img src="$content.getURI('images/colorbar.png')" />
 												</TD>
@@ -467,9 +465,6 @@
 	<!-- BEGIN ${elementName}.qcSession.tisData.tissue -->
 						#if ($datatype != "SegCat12Data")
 							#set($tisDats = $item.getChildItems("${elementName}.qcSession.tisData").size() - 1 )
-							<script type="text/javascript" LANGUAGE="JavaScript">
-								console.log("Number of tissue data entries: $tisDats")
-							 </script>
 							
 							## Set Tissue Report  
 							 <TR>
@@ -595,7 +590,7 @@
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">SPM12 MC output (RP file)</TD>
-												<TD $style_cell_border colspan="4">#riiplShowString("${elementName}.qcSession.mvmtFile" $item "" $vr).replaceAll(".*\/","")</TD>
+												<TD $style_cell_border colspan="4">$item.getProperty("${elementName}.qcSession.mvmtFile").replaceAll(".*\/","")</TD>
 											</TR>
 											<TR>
 												<TD $style_cell_border colspan="2">RP File Timestamp</TD>
@@ -623,9 +618,10 @@
 								<TR>
 									<TD align="left" valign="top">
 										<TABLE>
-											<TR><TD>Assesor</TD><TD>$item.getProperty("${elementName}.qcSession.username")</TD></TR>
+											<TR><TD>Assessor</TD>
+											<TD>$item.getProperty("${elementName}.qcSession.username")</TD></TR>
 											<TR>
-												<TD>Assesment Date</TD>
+												<TD>Assessment Date</TD>
 												<TD>
 													#riiplShowDate("${elementName}.qcSession.date" $item $vr $years)
 													$item.getProperty("${elementName}.qcSession.time")
