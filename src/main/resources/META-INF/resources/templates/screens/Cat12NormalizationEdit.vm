@@ -641,15 +641,13 @@
 											
 											#xdatHiddenBox("${elementName}/qcSession/date" "" '')
 											#xdatHiddenBox("${elementName}/qcSession/time" "" '')
-											##xdatDateBox("${elementName}/qcSession/date" '' $vr $years)
-											##xdatTimeBox("${elementName}/qcSession/time" '' "" $vr)
 												
 											#if($qcSessionIndex == $numOfQCSessions)
 												<TR><TD>Final Quality</TD><TD>#riiplSimpleSelectBox("${elementName}.qcSession.quality" $item $status $vr)</TD></TR>
-												<TR><TD>Comments</TD><TD>#xdatStringBox("${elementName}.qcSession.comments" $item "" $vr)</TD></TR>
+												<TR><TD>Comments</TD><TD>#xdatStringBox("${elementName}/qcSession/comments" $item "" $vr)</TD></TR>
 											#else
 												<TR><TD>Final Quality</TD><TD>#riiplShowString("${elementName}.qcSession.quality" $item $finalStatus $vr)</TD></TR>
-												<TR><TD>Comments</TD><TD>#riiplShowString("${elementName}.qcSession.comments" $item "" $vr)</TD></TR>
+												<TR><TD>Comments</TD><TD>#riiplShowString("${elementName}/qcSession/comments" $item "" $vr)</TD></TR>
 											#end
 										</TABLE>
 									</TD>
@@ -682,35 +680,44 @@
 <script type="text/javascript">
 	function validateForm()
 	{
-		//INSERT CUSTOM CONTENT HERE
 		try
 		{
+			// Fix Date
 			var date = document.forms["form1"]["${elementName}/qcSession/date"].value;
 			
-			var today = new Date();
-			var dd = today.getDate();
-			var mm = today.getMonth()+1; //January is 0!
-			var yyyy = today.getFullYear();
-			var hh = today.getHours();
-			var mm = today.getMinutes();
-			var ss = today.getSeconds()
+			// today
+			var today	= new Date();
+			var days	= today.getDate();
+			var months	= today.getMonth() + 1;
+			var year	= today.getFullYear();
+			
+			// hours
+			var hh		= today.getHours();
+			var mm 		= today.getMinutes();
+			var ss 		= today.getSeconds()
 
-			if(dd<10) {
-			    dd = '0'+dd
+			if(days<10) {
+			    days = '0' + days
 			} 
 			
-			if(mm<10) {
-			    mm = '0'+mm
+			if(months<10) {
+			    months = '0'+ months
 			} 
 
-			today = mm + '/' + dd + '/' + yyyy;
-			alert(today)
+			today = months + '/' + days + '/' + year;
 			now = hh + ':' + mm + ':' + ss;
 			
 			if ( date == "") {
 				document.forms["form1"]["${elementName}/qcSession/date"].value = today;
 				document.forms["form1"]["${elementName}/qcSession/time"].value = now;
 			} 
+			
+			// Fix comments
+			comments = document.forms["form1"]["${elementName}/qcSession/comments"].value;
+			
+			if ( comments == '' ) {
+				document.forms["form1"]["${elementName}/qcSession/comments"].value = '-';
+			}
 			
 			validateExperimentForm();
 		}
