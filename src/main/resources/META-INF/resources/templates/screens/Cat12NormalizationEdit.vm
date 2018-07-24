@@ -9,6 +9,7 @@
 #set($project					= $!item.getProperty("${elementName}/project"))
 #set($qc_id						= $!item.getProperty("${elementName}/imageSession_ID"))
 
+
 #macro ( includeXtk )
 	<script type="text/javascript" LANGUAGE="JavaScript" src="$content.getURI('scripts/xtk.js')"> </script>
 	<script type="text/javascript">
@@ -346,8 +347,6 @@
 																			#set ($urlFile = $content.getURI("/data/projects/").concat("${project}/subjects/${subject_id}/experiments/${qc_id}/resources/QC_IMAGES/files/${datatype}/${fn}") )
 																		#end
 
-																		##Special case names for image overlays
-																		##for LST8
 																		#if ($imgDataIndex == 1)
 																			#set ($flair  = $urlFile)
 																		#end
@@ -636,17 +635,15 @@
 									<TD align="left" valign="top">
 										<TABLE>
 											<TR><TD>Assessor</TD>
-											<TD>#riiplShowString("${elementName}.qcSession.username" $item $fullname $vr)</TD>
-											
+											<TD>#xdatStringBox("${elementName}/qcSession/username" "" $username $vr)</TD>
 											</TR>
 											
-											<TR>
-												<TD>Assessment Date</TD>
-												<TD>
-													#riiplShowDate("${elementName}.qcSession.date" $item $vr $years)
-													#riiplShowString("${elementName}.qcSession.time" $item "" $vr)
-												</TD>
-											</TR>
+											
+											#xdatHiddenBox("${elementName}/qcSession/date" "" '')
+											#xdatHiddenBox("${elementName}/qcSession/time" "" '')
+											##xdatDateBox("${elementName}/qcSession/date" '' $vr $years)
+											##xdatTimeBox("${elementName}/qcSession/time" '' "" $vr)
+												
 											#if($qcSessionIndex == $numOfQCSessions)
 												<TR><TD>Final Quality</TD><TD>#riiplSimpleSelectBox("${elementName}.qcSession.quality" $item $status $vr)</TD></TR>
 												<TR><TD>Comments</TD><TD>#xdatStringBox("${elementName}.qcSession.comments" $item "" $vr)</TD></TR>
@@ -683,21 +680,50 @@
 </form>
 
 <script type="text/javascript">
-function validateForm()
-{
-	//INSERT CUSTOM CONTENT HERE
-	try
+	function validateForm()
 	{
-		validateExperimentForm();
+		//INSERT CUSTOM CONTENT HERE
+		try
+		{
+			var date = document.forms["form1"]["${elementName}/qcSession/date"].value;
+			
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth()+1; //January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var mm = today.getMinutes();
+			var ss = today.getSeconds()
+
+			if(dd<10) {
+			    dd = '0'+dd
+			} 
+			
+			if(mm<10) {
+			    mm = '0'+mm
+			} 
+
+			today = mm + '/' + dd + '/' + yyyy;
+			alert(today)
+			now = hh + ':' + mm + ':' + ss;
+			
+			if ( date == "") {
+				document.forms["form1"]["${elementName}/qcSession/date"].value = today;
+				document.forms["form1"]["${elementName}/qcSession/time"].value = now;
+			} 
+			
+			validateExperimentForm();
+		}
+		catch (err)
+		{
+			try {alert("error name: " + err.name); } catch (err2) {}
+			try {alert("error message: " + err.message); } catch (err2) {}
+			try {alert("error file: " + err.fileName); } catch (err2) {}
+			try {alert("error lineNumber: " + err.lineNumber); } catch (err2) {}
+			try {alert("error extMessage: " + err.extMessage); } catch (err2) {}
+		}
+		return false;
 	}
-	catch (err)
-	{
-		try {alert("error name: " + err.name); } catch (err2) {}
-		try {alert("error message: " + err.message); } catch (err2) {}
-		try {alert("error file: " + err.fileName); } catch (err2) {}
-		try {alert("error lineNumber: " + err.lineNumber); } catch (err2) {}
-		try {alert("error extMessage: " + err.extMessage); } catch (err2) {}
-	}
-	return false;
-}
+		
+</script>
 </script>
