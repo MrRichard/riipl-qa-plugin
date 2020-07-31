@@ -15,8 +15,8 @@ import org.nrg.framework.annotations.XnatDataModel;
  */
 @XnatPlugin(
 	value = "riipl-qa-plugin",
-	name = "RIIPL XNAT QA Plugin Ver 0.0.4",
-	description = "Plugin for RIIPL Pipeline-specific QA",
+	name = "RIIPL XNAT QA Plugin Ver 0.0.5",
+	description = "Now featuring PETPVC",
 	dataModels = {
 			@XnatDataModel(
 				value= "riiplqa:Cat12Data",
