@@ -19,7 +19,7 @@ import org.nrg.framework.annotations.XnatDataModel;
 	description = "Now featuring PETPVC",
 	dataModels = {
 			@XnatDataModel(
-				value= "riiplqa:Cat12Data",
+				value= "riiplqa:SegCat12Data",
 				singular = "QC CAT12 Seg Report",
 				plural = "QC CAT12 Seg Reports",
 				code = "QA"
