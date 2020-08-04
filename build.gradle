@@ -11,7 +11,7 @@ import org.gradle.internal.jvm.Jvm
 
 buildscript {
     ext {
-        vXnat = '1.7.4'
+        vXnat = '1.7.6'
     }
     repositories {
         mavenLocal()
@@ -32,8 +32,8 @@ buildscript {
     }
 }
 
-group 'org.nrg.xnat.plugins'
-version '0.0.5'
+group 'org.nrg.xnat.riiplqa.plugin'
+version '0.6'
 
 // TODO: This is the minimum set of Gradle plugins required to build most XNAT plugins. You may include many others, including plugins for testing and test coverage, IDE integration, and more.
 apply plugin: 'io.spring.dependency-management'
