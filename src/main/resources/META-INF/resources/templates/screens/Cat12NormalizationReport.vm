@@ -251,7 +251,6 @@
 					
 					<TD valign="top" align="right">
 						#elementActionsBoxNoEnd($element $search_field $search_value $user $item)
-						#addCustomScreens("$element" "actionsBox")
 					</TD>
 
 				</TR>
@@ -698,7 +697,6 @@
 						</TD>
 						<TD valign="top" align="right">
 							#elementActionsBoxNoEnd($element $search_field $search_value $user $item)
-							#addCustomScreens("$element" "actionsBox")
 						</TD>
 					</TR>
 				</TABLE>

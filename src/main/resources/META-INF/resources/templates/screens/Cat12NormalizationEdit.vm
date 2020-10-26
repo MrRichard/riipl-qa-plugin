@@ -476,7 +476,7 @@
 								</TR>
 	<!-- END ${elementName}.qcSession.imgData -->
 	<!-- <TABLE>-->
-	<!-- BEGIN ${elementName}.qcSession.tisData.tissue -->
+	<!-- BEGIN ${elementName}.qcSession.Data.tissue -->
 					#if ($datatype != "SegCat12Data")
 							#set($tisDats = $item.getChildItems("${elementName}.qcSession.tisData").size() - 1 )
 							
@@ -715,7 +715,8 @@
 			##xdatHiddenBox("${elementName}/qcSession/${namespace}_${datatype}_qcSession_id" $item "")
 			<TR>
 				<TD COLSPAN=2 ALIGN=left>
-					<input type="button" ONCLICK="validateForm();"  name="eventSubmit_doInsert" value="Submit"/>
+					##<input type="button" ONCLICK="validateForm();"  name="eventSubmit_doInsert" value="Submit"/>
+					<input type="button" ONCLICK="validateForm();"  name="eventSubmit_doUpdate" value="Submit"/>
 				</TD>
 			</TR>
 		</TD>
