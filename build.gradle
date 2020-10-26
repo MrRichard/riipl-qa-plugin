@@ -1,11 +1,4 @@
-/*
- * riipl-qa-plugin: build.gradle
- * XNAT http://www.xnat.org
- * Copyright (c) 2017, Washington University School of Medicine
- * All Rights Reserved
- *
- * Released under the Simplified BSD.
- */
+
 
 import org.gradle.internal.jvm.Jvm
 
@@ -32,8 +25,8 @@ buildscript {
     }
 }
 
-group 'org.nrg.xnat.riiplqa.plugin'
-version '0.6'
+group 'org.nrg.xnat.riiplqa'
+version '0.7'
 
 // TODO: This is the minimum set of Gradle plugins required to build most XNAT plugins. You may include many others, including plugins for testing and test coverage, IDE integration, and more.
 apply plugin: 'io.spring.dependency-management'

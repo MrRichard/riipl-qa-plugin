@@ -1,12 +1,5 @@
-/*
- * xnat-template: org.nrg.xnat.plugins.template.plugin.XnatTemplatePlugin
- * XNAT http://www.xnat.org
- * Copyright (c) 2017, Washington University School of Medicine
- * All Rights Reserved
- *
- * Released under the Simplified BSD.
- */
-package org.nrg.xnat.riiplqa.plugin;
+
+package org.nrg.xnat.riiplqa;
 import org.nrg.framework.annotations.XnatPlugin;
 import org.nrg.framework.annotations.XnatDataModel;
 
@@ -39,5 +32,4 @@ import org.nrg.framework.annotations.XnatDataModel;
 			plural = "QC NODDI CAT12 Seg Reports",
 			code = "QA")})
 
-public class riiplqa{	
-}
+public class RiiplQaXnatPlugin {}

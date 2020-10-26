@@ -1,0 +1,3 @@
+<li class="yuimenuitem">
+	<a class="yuimenuitemlabel" href="$link.setAction("edit").addPathInfo('experiment',$experiment.getId())">Edit QA Report</A>
+</li>
