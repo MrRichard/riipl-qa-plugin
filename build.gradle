@@ -1,154 +1,83 @@
-
+/*
+ * riipl-qa-plugin: build.gradle
+ * XNAT http://www.xnat.org
+ * Copyright (c) 2020, Washington University School of Medicine
+ * All Rights Reserved
+ *
+ * Released under the Simplified BSD.
+ */
 
 import org.gradle.internal.jvm.Jvm
 
+// TODO: This block is required for the "xnat-data-builder" plugin to function.
 buildscript {
     ext {
-        vXnat = '1.7.6'
+        vXnat = "1.7.6"
     }
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
-        maven {
-            url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release'
-            name 'XNAT Release Repository'
-        }
-        maven {
-            url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot'
-            name 'XNAT Snapshot Repository'
-        }
+        gradlePluginPortal()
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
     }
     dependencies {
         classpath "org.nrg.xnat.build:xnat-data-builder:${vXnat}"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+        classpath "io.franzbecker:gradle-lombok:3.2.0"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE"
     }
 }
 
-group 'org.nrg.xnat.riiplqa'
-version '0.7'
+// TODO: Change the group and version to values appropriate for your plugin project.
+// NOTE: You should not leave the group value set to "org.nrg.xnatx.plugins"! Use
+//       something to indicate who developed the plugin and follow the standard
+//       Maven naming conventions: https://maven.apache.org/guides/mini/guide-naming-conventions.html
+//       For example, if a group at Miskatonic University developed a plugin, the
+//       group might be "edu.miskatonic.imaging.xnat".
+group "org.nrg.xnatx.plugins"
+version '0.0.5'
 
 // TODO: This is the minimum set of Gradle plugins required to build most XNAT plugins. You may include many others, including plugins for testing and test coverage, IDE integration, and more.
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'jacoco'
-apply plugin: 'xnat-data-builder'
+apply plugin: "java"
+apply plugin: "xnat-data-builder"
+apply plugin: "io.franzbecker.gradle-lombok"
+apply plugin: "io.spring.dependency-management"
 
 // TODO: This provides access to all of these repositories for dependency resolution.
 repositories {
     mavenLocal()
-    mavenCentral()
+    maven { url "https://www.dcm4che.org/maven2" }
     jcenter()
-    maven {
-        url 'http://dcm4che.org/maven2'
-        name 'dcm4che Maven Repository'
-    }
-    maven {
-        url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release'
-        name 'XNAT Release Repository'
-    }
-    maven {
-        url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot'
-        name 'XNAT Snapshot Repository'
-    }
-    maven {
-        url 'https://nrgxnat.jfrog.io/nrgxnat/ext-release'
-        name 'XNAT External Release Repository'
-    }
+    mavenCentral()
+    maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+    maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
 }
 
 // TODO: As of the 1.7.x release, XNAT is built as a Java 7-compatible (i.e. JDK 1.7) application. All plugins must be 1.7 compatible as well.
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+// TODO: This defines a dependency package, specifically the XNAT NRG parent pom, which specifies
+//       versions for all of XNAT's dependencies. This helps ensure that plugins are building
+//       against the same versions of various libraries as XNAT itself.
 dependencyManagement.imports {
     mavenBom "org.nrg:parent:${vXnat}"
 }
 
 // TODO: This is a pretty minimal set of dependencies, so don't worry if you need to add more.
 dependencies {
-    implementation("org.nrg.xnat:web") {
-        transitive = false
-    }
-    implementation("org.nrg.xnat:xnat-data-models") {
-        transitive = false
-    }
-    implementation("org.nrg.xdat:core") {
-        transitive = false
-    }
-    implementation "org.nrg:prefs"
-    implementation "org.nrg:framework"
-
-    implementation("turbine:turbine") {
-        transitive = false
-    }
-    implementation("org.apache.velocity:velocity") {
-        transitive = false
-    }
-    implementation("stratum:stratum") {
-        transitive = false
-    }
-    
-    // https://mvnrepository.com/artifact/ecs/ecs
-	compile group: 'ecs', name: 'ecs', version: '1.4.2'
-    
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore
-	compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3.2'
-	
-	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3'
-
-	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient-cache
-	compile group: 'org.apache.httpcomponents', name: 'httpclient-cache', version: '4.3.3'
-	
-	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
-	compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.3'
-	
-	// https://mvnrepository.com/artifact/jfree/jcommon
-	compile group: 'jfree', name: 'jcommon', version: '1.0.16'
-	
-	// https://mvnrepository.com/artifact/org.jfree/jfreechart
-	compile group: 'org.jfree', name: 'jfreechart', version: '1.0.14'
-	
-	// https://mvnrepository.com/artifact/org.apache.velocity/velocity-tools
-	compile group: 'org.apache.velocity', name: 'velocity-tools', version: '2.0'
-	
-	// https://mvnrepository.com/artifact/velocity-tools/velocity-tools-view
-	compile group: 'velocity-tools', name: 'velocity-tools-view', version: '1.4'
-	
-	
-	// https://mvnrepository.com/artifact/net.imagej/ij
-	compile group: 'net.imagej', name: 'ij', version: '1.49j'
-	
-	// https://mvnrepository.com/artifact/org.json/json
-	compile group: 'org.json', name: 'json', version: '20160810'
-	
-	compile files('./libs/niftijlib-0.2.0.jar')
-	
-
-    implementation "log4j:log4j"
+    implementation "org.nrg.xnat:web"
+    implementation "org.nrg.xnat:xnat-data-models"
+    implementation "org.nrg.xdat:core"
     implementation "io.springfox:springfox-swagger2"
+    implementation "io.springfox:springfox-swagger-ui"
 }
 
-configurations {
-    compile.extendsFrom(compileAndInclude)
+lombok {
+    version = dependencyManagement.importedProperties["lombok.version"] as String
+    sha256 = dependencyManagement.importedProperties["lombok.checksum"] as String
 }
-
-task fatJar(type: Jar) {
-    zip64 true
-    classifier = "fat"
-    from {
-        configurations.compileAndInclude.collect { it.isDirectory() ? it : zipTree(it) }
-    } {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
-    }
-    with jar
-}
-
-
 
 // TODO: If the compiler is Java 8 or later, this checks for a Java 7 version of the primary Java run-time library. Building with post-Java 7 libraries can result in occasional compatibility issues.
 def javaVersion = Jvm.current().javaVersion
@@ -162,7 +91,7 @@ if (javaVersion.java8Compatible || javaVersion.java9Compatible) {
             tasks.withType(JavaCompile) {
                 options.fork = true
                 options.compilerArgs << "-XDignore.symbol.file"
-                options.bootClasspath = rt17jar as String
+                options.bootstrapClasspath = files(rt17jar as String)
             }
         }
     } else {
@@ -171,29 +100,16 @@ if (javaVersion.java8Compatible || javaVersion.java9Compatible) {
     }
 }
 
-// TODO: This configures the Jacoco test coverage plugin.
-jacoco {
-    toolVersion = dependencyManagement.importedProperties["jacoco.version"]
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.destination file("${buildDir}/jacocoHtml")
-    }
-}
-
 // TODO: This tells the compiler where to find source code. This isn't required in a standard build, but the XNAT data builder generates code from XNAT data-type schemas that the compiler needs to know about.
 sourceSets {
     main {
         java {
-            srcDir 'src/main/java'
-            srcDir 'build/xnat-generated/src/main/java'
+            srcDir "src/main/java"
+            srcDir "build/xnat-generated/src/main/java"
         }
         resources {
-            srcDir 'src/main/resources'
-            srcDir 'build/xnat-generated/src/main/resources'
+            srcDir "src/main/resources"
+            srcDir "build/xnat-generated/src/main/resources"
         }
     }
 }
