@@ -521,58 +521,13 @@
 															</TD>
 															
 															<TD $style_cell_border>$item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].imageType")</TD>
-															#if ($datatype == "NormCat12DTIData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
-															#elseif ($datatype == "NormCat12DKIData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
-															#elseif ($datatype == "NormCat12DKEData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
-															#elseif ($datatype == "NormCat12PASLData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>-</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
-															#elseif ($datatype == "NormCat12PCASLData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>-</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
-															#elseif ($datatype == "NormCat12PCASL8Data")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>-</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>
-															#elseif ($datatype == "NormCat12PETPVCData")
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].rv" $item "" $vr)</TD>
-															#else
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>
-																<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>
-															#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gm" $item "" $vr)</TD>#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wm" $item "" $vr)</TD>#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csf" $item "" $vr)</TD>#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].gmThresh" $item "" $vr)</TD>#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].wmThresh" $item "" $vr)</TD>#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].csfThresh" $item "" $vr)</TD>#end
+															#if($item.getProperty("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].rv"))<TD $style_cell_border>#riiplShowString("${elementName}.qcSession.tisData[$tisDat].tissue[$tisDataIndex].rv" $item "" $vr)</TD>#end
 														</TR>
 													#end
 												#end
@@ -588,7 +543,7 @@
 						#end
 
 	<!--motion paramters-->
-	#if ($datatype == "NormCat12PCASLData" || $datatype == "NormCat12PCASL8Data") 
+	#if($item.getProperty("${elementName}.qcSession.mvmtFile"))
 		#if ($!item.getProperty("${elementName}.qcSession.mvmtFile"))
 								<TR>
 									<TH align="left"><BR><font face="$ui.sansSerifFonts" size="2">Motion Parameters</font></TH>

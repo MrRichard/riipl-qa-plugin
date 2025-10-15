@@ -20,7 +20,13 @@
 					<xs:documentation>CAT12 Segmentation Image QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -52,9 +58,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" type="xs:string"/>
 						</xs:complexType>
@@ -71,7 +95,13 @@
 					<xs:documentation>CAT12 Normalization of 8 Phase PCASL QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -107,9 +137,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" type="xs:string" use="optional"/>
 							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
@@ -137,7 +185,13 @@
 					<xs:documentation>CAT12 Normalization of PCASL QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -173,9 +227,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" type="xs:string" use="optional"/>
 							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
@@ -203,7 +275,13 @@
 					<xs:documentation>CAT12 Normalization of PCASL Breath Hold QA Report (non-PVC)</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -239,9 +317,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" use="optional" type="xs:string"/>
 							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
@@ -269,7 +365,13 @@
 					<xs:documentation>CAT12 Normalization of fMRI Sequence QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -305,9 +407,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" type="xs:string" use="optional"/>
 							<xs:attribute name="mvmtImage" type="xs:string" use="optional"/>
@@ -335,7 +455,13 @@
 					<xs:documentation>CAT12 Normalization of DTI QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -371,9 +497,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" use="optional" type="xs:string"/>
 						</xs:complexType>
@@ -390,7 +534,13 @@
 					<xs:documentation>CAT12 Normalization of DKI QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -426,9 +576,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" use="optional" type="xs:string"/>
 						</xs:complexType>
@@ -445,7 +613,13 @@
 					<xs:documentation>CAT12 Normalization of NODDI QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -481,9 +655,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" use="optional" type="xs:string"/>
 						</xs:complexType>
@@ -500,7 +692,13 @@
 					<xs:documentation>CAT12 Normalization of PETPVC QA Report</xs:documentation>
 				</xs:annotation>
 				<xs:sequence minOccurs="0">
-					<xs:element name="subject" type="xs:string" minOccurs="0"/>
+					<xs:element name="subject" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:appinfo>
+								<xdat:field display="true"/>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="qcSession" minOccurs="0" >
 						<xs:complexType>
 							<xs:sequence minOccurs="0">
@@ -534,9 +732,27 @@
 								</xs:element>
 							</xs:sequence>
 							<xs:attribute name="qcImage" type="xs:string" use="optional"/>
-							<xs:attribute name="quality" type="xs:string" use="required"/>
-							<xs:attribute name="username" type="xs:string" use="required"/>
-							<xs:attribute name="date" type="xs:date" use="required"/>
+							<xs:attribute name="quality" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="username" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="date" type="xs:date" use="required">
+								<xs:annotation>
+									<xs:appinfo>
+										<xdat:field display="true"/>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:attribute>
 							<xs:attribute name="time" type="xs:time" use="required"/>
 							<xs:attribute name="comments" use="optional" type="xs:string"/>
 						</xs:complexType>
