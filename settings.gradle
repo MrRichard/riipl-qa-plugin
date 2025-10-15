@@ -7,5 +7,14 @@
  * Released under the Simplified BSD.
  */
 
+pluginManagement {
+    repositories {
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 // TODO: Replace this with your project name. The project name should indicate the function of the plugin.
 rootProject.name = 'riipl-qa-plugin'
